@@ -68,12 +68,22 @@ class Student(models.Model):
         ('Male', 'Male'),
         ('Female', 'Female'),
     )
+    LEVELofSUPPORT = (
+        ('PrimaryOnly', 'PrimaryOnly'),
+        ('Primary&Secondary', 'Primary&Secondary'),
+        ('Primary&Secondary&Tertiary', 'Primary&Secondary&Tertiary'),
+        ('Secondary&tertiary', 'Secondary&tertiary'),
+        ('TertiaryOnly', 'TertiaryOnly'),
+        ('SecondaryOnly', 'SecondaryOnly'),
+        ('Primany&Tertiary', 'Primany&Tertiary'),
+    )
     studentName = models.CharField(max_length=100)
     gender = models.CharField(max_length=10, choices=GENDER)
     intermediary = models.ForeignKey(Intermediary, on_delete=models.CASCADE)
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
     backgroundInfo = models.TextField()
+    profilePic = models.FileField(upload_to='profile_pics', blank=True)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -100,9 +110,6 @@ class Employee(models.Model):
 
     def __str__(self):
         return f'{self.employeeName}'
-    
-class Results(models.Model):
-    studentId = models.ForeignKey(Student, on_delete=models.CASCADE)
 
 
 
