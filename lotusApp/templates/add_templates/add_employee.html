@@ -22,28 +22,29 @@
         margin: 20px;
     }
 </style>
-<h2>Add Intermediary Form</h2>
+<h2>Add Donor Form</h2>
 <div class="main">
     <form method="post"enctype="multipart/form-data">
-        {% for message in messages %}
-        <p style="color: red;text-transform: uppercase;">{{ message }}</p>
-        {% endfor%}
         {% csrf_token %}
         <div class="mb-4">
-            {{form.intermediaryName.label_tag}}
-            {{form.intermediaryName}}
+            {{form.employeeName.label_tag}}
+            {{form.employeeName}}
         </div>
         <div class="mb-4">
-            {{form.intermediaryEmail.label_tag}}
-            {{form.intermediaryEmail}}
+            {{form.employeeEmail.label_tag}}
+            {{form.employeeEmail}}
         </div>
         <div class="mb-4">
-            {{form.intermediaryPhone.label_tag}}
-            {{form.intermediaryPhone}}
+            {{form.employeePhone.label_tag}}
+            {{form.employeePhone}}
         </div>
         <div class="mb-4">
-            {{form.location.label_tag}}
-            {{form.location}}
+            {{form.gender.label_tag}}
+            {{form.gender}}
+        </div>        
+        <div class="mb-4">
+            {{form.department.label_tag}}
+            {{form.department}}
         </div>        
         <button class="btn btn-primary" type="submit">Save</button>
         

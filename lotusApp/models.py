@@ -53,7 +53,7 @@ class Donor(models.Model):
         ('Male', 'Male'),
         ('Female', 'Female'),
     )
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, blank=True, on_delete=models.CASCADE, null=True)
     donorName = models.CharField(max_length=100)
     donorEmail = models.EmailField(max_length=100, unique=True)
     donorPhone = models.CharField(max_length=10, unique=True)

@@ -11,5 +11,10 @@ urlpatterns = [
     path('add_intermediary/', views.add_intermediary, name='add_intermediary'),
     path('schools/', views.schools, name='schools'),
     path('add_school/', views.add_school, name='add_school'),
+    path('finance/', views.finance, name='finance'),
+    path('add_donor/', views.add_donor, name='add_donor'),
+    path('add_employee/', views.add_employee, name='add_employee'),
+    path('donor_list/', views.donor_list, name='donor_list'),
+    path('employee_list/', views.employee_list, name='employee_list'),
     path('logout/', views.logout_view, name='logout'),
 ]
