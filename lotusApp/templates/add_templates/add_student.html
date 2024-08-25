@@ -4,7 +4,7 @@
     h2{
         text-align: center;
     }
-    form{
+    .main{
         margin: 20px;
         padding: 20px;
         background: aqua;
@@ -15,16 +15,51 @@
         flex-direction: column;
         font-size: 1em;
     }
-    form input:focus{
-        outline: blue;
+    .main form{
+        font-weight: 600;        
+    }
+    .mb-4{
+        margin: 10px;
     }
 </style>
 <h2>Add Student Form</h2>
 <div class="main">
     <form method="post"enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Save</button>
+        <div class="mb-4">
+            {{form.studentName.label_tag}}
+            {{form.studentName}}
+        </div>
+        <div class="mb-4">
+            {{form.gender.label_tag}}
+            {{form.gender}}
+        </div>
+        <div class="mb-4">
+            {{form.dateofbirth.label_tag}}
+            {{form.dateofbirth}}
+        </div>
+        <div class="mb-4">
+            {{form.phone.label_tag}}
+            {{form.phone}}
+        </div>
+        <div class="mb-4">
+            {{form.intermediary.label_tag}}
+            {{form.intermediary}}
+        </div>
+        <div class="mb-4">
+            {{form.donor.label_tag}}
+            {{form.donor}}
+        </div>
+        <div class="mb-4">
+            {{form.backgroundInfo.label_tag}}
+            {{form.backgroundInfo}}
+        </div>
+        <div class="mb-4">
+            {{form.profilePic.label_tag}}
+            {{form.profilePic}}
+        </div>        
+        <button class="btn btn-primary" type="submit">Save</button>
+        
     </form>
 </div>
 {% endblock %}

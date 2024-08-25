@@ -21,32 +21,22 @@
     .mb-4{
         margin: 20px;
     }
-    #message{
-        text-align: center;
-        color: blue;
-        font-weight: 800;
-        text-transform: uppercase;
-        padding: 10px;
-    }
 </style>
-<h2>Add Intermediary Form</h2>
+<h2>Add Donor Form</h2>
 <div class="main">
     <form method="post"enctype="multipart/form-data">
-        {% for message in messages %}
-        <p id="message">{{ message }}</p>
-        {% endfor%}
         {% csrf_token %}
         <div class="mb-4">
-            {{form.intermediaryName.label_tag}}
-            {{form.intermediaryName}}
+            {{form.schoolName.label_tag}}
+            {{form.schoolName}}
         </div>
         <div class="mb-4">
-            {{form.intermediaryEmail.label_tag}}
-            {{form.intermediaryEmail}}
+            {{form.schoolEmail.label_tag}}
+            {{form.schoolEmail}}
         </div>
         <div class="mb-4">
-            {{form.intermediaryPhone.label_tag}}
-            {{form.intermediaryPhone}}
+            {{form.phone.label_tag}}
+            {{form.phone}}
         </div>
         <div class="mb-4">
             {{form.location.label_tag}}
