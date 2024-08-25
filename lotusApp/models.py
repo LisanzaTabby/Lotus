@@ -83,8 +83,8 @@ class Student(models.Model):
     intermediary = models.ForeignKey(Intermediary, on_delete=models.CASCADE)
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    backgroundInfo = models.TextField(null=False)
-    profilePic = models.FileField(upload_to='profile_pics', blank=True, null=False)
+    backgroundInfo = models.TextField(null=True, blank=True)
+    profilePic = models.ImageField(upload_to='profile_pics', blank=True, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

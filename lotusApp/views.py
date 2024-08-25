@@ -6,10 +6,8 @@ from .forms import StudentForm, DonorForm, IntermediaryForm, SchoolForm, Employe
 from .models import School, Student, Donor, Intermediary, Employee
 
 # Create your views here.
-
 def index(request):
     return render(request, 'index.html')
-
 def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -37,11 +35,12 @@ def dataentry(request):
     context = {'students':students, 'student_count':student_count, 'intermediaries': intermediaries, 'intermediary_count': intermediary_count, 'schools': schools, 'school_count': school_count}
     return render(request, 'User_pages/dataentry.html', context)
 def students(request):
-    context = {}
+    students = Student.objects.all().order_by('id')
+    context = {'students':students}
     return render(request, 'lists/student_list.html', context)
 def add_student(request):
     if request.method == 'POST':
-        form = StudentForm(request.POST)
+        form = StudentForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect('students')
@@ -51,9 +50,26 @@ def add_student(request):
         
     form = StudentForm()
     return render(request, 'add_templates/add_student.html', {'form': form})
+# student Profile
+def student_profile(request, pk):
+    student = Student.objects.get(id=pk)
+    context = {'student': student}
+    return render(request, 'profiles/student_profile.html', context)
+def edit_student(request, pk):
+    student = Student.objects.get(id=pk)
+    form = StudentForm(instance=student)
+    if request.method == 'POST':
+        form = StudentForm(request.POST, request.FILES, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Student Information Updated SuccessFully!')
+            return redirect('students')
+    context = {'form':form}
+    return render(request, 'add_templates/add_student.html', context)
 
 def intermediaries(request):
-    context = {}
+    intermediaries = Intermediary.objects.all()
+    context = {'intermediaries':intermediaries}
     return render(request, 'lists/intermediary_list.html', context)
 def add_intermediary(request):
     if request.method == 'POST':
@@ -64,14 +80,14 @@ def add_intermediary(request):
             messages.info(request, 'Intermediary added Successfully!')
             return redirect('intermediaries')
         else:
-            errors = form.errors
-            messages.error(request, errors)
+            messages.error(request, 'Invalid form')
             return render(request, 'add_templates/add_intermediary.html', {'form': form})
         
     form = IntermediaryForm()
     return render(request, 'add_templates/add_intermediary.html', {'form': form})
 def schools(request):
-    context = {}
+    schools = School.objects.all()
+    context = {'schools':schools}
     return render(request, 'lists/school_list.html',context)
 def add_school(request):
     if request.method == 'POST':
@@ -106,7 +122,6 @@ def add_donor(request):
             messages.info(request, 'Donor added Successfully!')
             return redirect('donor_list')
         else:
-            print(form.errors)
             messages.error(request, 'Invalid Form')
             return render(request, 'add_templates/add_donor.html', {'form': form})
     form = DonorForm()
@@ -126,10 +141,12 @@ def add_employee(request):
     return render(request, 'add_templates/add_employee.html', {'form': form})
 #finance pages access
 def donor_list(request):
-    context = {}
+    donors = Donor.objects.all()
+    context = {'donors':donors}
     return render(request, 'lists/donor_list.html', context)
 def employee_list(request):
-    context = {}
+    employees = Employee.objects.all()
+    context = {'employees':employees}
     return render(request, 'lists/employee_list.html', context)
 
 # logout function

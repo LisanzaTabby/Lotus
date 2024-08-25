@@ -1,0 +1,33 @@
+{% extends 'navbars/dataentrynavbar.html' %}
+{% block content %}
+<style>
+    .main{
+        margin: 30px;
+        padding: 25px;
+        background: aqua;
+        border-radius: 10px;
+        font-weight: 600;
+        text-align: center;
+    }
+    .profilepic{
+        max-width: 200px;
+        max-height: 200px;
+        margin: 0 auto;
+        border-radius: 50%;
+        
+    }
+</style>
+<div class="main">
+            <img class="profilepic"style="align-items: center;" src="{{ student.profilePic.url }}" alt="studentProfilePhoto">
+            <p>Student Name: {{ student.studentName }}</p>
+            <p>Gender: {{student.gender}}</p>
+            <p>Donor: {{ student.donor }}</p>
+            <p>Intermediary: {{ student.intermediary}}</p>
+            <p>Date of Birth: {{student.dateofbirth}}</p>
+          BackGround Information:
+                <p>{{ student.backgroundInfo }}</p>
+          Date added : {{ student.date_added}}
+         
+</div>
+
+{% endblock %}
