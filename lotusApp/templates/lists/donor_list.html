@@ -17,4 +17,43 @@
 {% for message in messages %}
 <p id="message">{{message}}</p>
 {% endfor %}
+<table style="margin-top: 20px;" class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">School ID</th>
+        <th scope="col">School Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Phone</th>
+        <th scope="col">Location</th>
+        <th scope="col">Date added</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    {% if donors %}
+
+    {% for donor in donors %}
+    <tbody>
+      <tr>
+        <td>{{donor.id}}</td>
+        <td>{{donor.donorName}}</td>
+        <td>{{donor.donorEmail}}</td>
+        <td>{{donor.donorPhone}}</td>
+        <td>{{donor.location}}</td>
+        <td>{{donor.date_added}}</td>
+        <td>
+            <a href="{% url 'edit_donor' donor.id  %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'delete_donor' donor.id  %}" class="btn btn-danger">Delete</a>
+            
+        </td>
+      </tr>
+    </tbody>
+    {% endfor %}
+    {% else %}
+    <tbody>
+      <tr>
+        <td colspan="6">No intermediaries found</td>
+      </tr>
+    </tbody>
+    {% endif %}
+  </table>
 {% endblock %}
