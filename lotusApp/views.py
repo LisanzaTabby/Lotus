@@ -6,6 +6,7 @@ from .forms import StudentForm, DonorForm, IntermediaryForm, SchoolForm, Employe
 from .models import School, Student, Donor, Intermediary, Employee
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
+from .filters import StudentFilter
 # Create your views here.
 @unauthenticated_user
 def index(request):
@@ -53,7 +54,9 @@ def dataentry(request):
 @allowed_users(allowed_roles=['Dataentry'])
 def students(request):
     students = Student.objects.all().order_by('id')
-    context = {'students':students}
+    my_filter = StudentFilter(request.POST, queryset=students)
+    students = my_filter.qs
+    context = {'students':students, 'my_filter':my_filter}
     return render(request, 'lists/student_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])

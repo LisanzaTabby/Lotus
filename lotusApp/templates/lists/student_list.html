@@ -14,6 +14,11 @@
     {% for message in messages %}
     <p id="message">{{message}}</p>
     {% endfor %}
+    <form method= 'get'class="d-flex" role="search">
+            {% csrf_token %}
+            {{ my_filter.form.as_p }}
+            <button class="btn btn-primary" type="submit">Search</button>
+          </form>
     <table style="margin-top: 20px;" class="table table-bordered">
         <thead>
           <tr>
