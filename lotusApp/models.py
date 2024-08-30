@@ -1,32 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
-
-class School(models.Model):
-    LOCATION = (
-        ('Nairobi', 'Nairobi'),
-        ('Mombasa', 'Mombasa'),
-        ('Kisumu', 'Kisumu'),
-        ('Kitale', 'Kitale'),
-        ('Eldoret', 'Eldoret'),
-        ('Nakuru', 'Nakuru'),
-        ('Kajiado', 'Kajiado'),
-        ('Laikipia', 'Laikipia'),
-    )
-    MODEOFSTUDY = (
-        ('8-4-4', '8-4-4'),
-        ('CBC', 'CBC'),
-    )
-    schoolName = models.CharField(max_length=100)
-    location = models.CharField(max_length=10, choices=LOCATION)
-    phone= models.CharField(max_length=10, unique=True)
-    schoolEmail = models.EmailField(max_length=100, unique=True)
-    date_added = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f'{self.schoolName}'
-    
+# Create your models here.    
 class Intermediary(models.Model):
     LOCATION = (
         ('Nairobi', 'Nairobi'),
@@ -42,6 +17,7 @@ class Intermediary(models.Model):
     intermediaryName= models.CharField(max_length=100)
     intermediaryEmail = models.EmailField(max_length=100, unique=True)
     intermediaryPhone = models.CharField(max_length=10, unique=True)
+    contactPerson = models.CharField(max_length=100, null=True, blank=True) 
     location = models.CharField(max_length=10, choices=LOCATION)
     date_added = models.DateTimeField(auto_now_add=True)
     
@@ -75,14 +51,16 @@ class Student(models.Model):
         ('Secondary&tertiary', 'Secondary&tertiary'),
         ('TertiaryOnly', 'TertiaryOnly'),
         ('SecondaryOnly', 'SecondaryOnly'),
-        ('Primany&Tertiary', 'Primany&Tertiary'),
+        ('Primary&Tertiary', 'Primany&Tertiary'),
     )
     studentName = models.CharField(max_length=100, null=False)
-    gender = models.CharField(max_length=10, choices=GENDER,null=False)
+    gender = models.CharField(max_length=10, choices=GENDER, null=False)
     dateofbirth = models.DateField(null=False)
     intermediary = models.ForeignKey(Intermediary, on_delete=models.CASCADE)
     donor = models.ForeignKey(Donor, on_delete=models.CASCADE)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    school = models.CharField(max_length=100, null=True, blank=True)
+    position = models.CharField(max_length= 25, null=True, blank=True, default='Continuing')
+    level = models.CharField(max_length=100, choices=LEVELofSUPPORT, null=True, blank=True) 
     backgroundInfo = models.TextField(null=True, blank=True)
     profilePic = models.ImageField(upload_to='profile_pics', blank=True, null=False)
     date_added = models.DateTimeField(auto_now_add=True)
@@ -102,6 +80,7 @@ class Employee(models.Model):
         ('IT', 'IT'),
         ('Data-entry', 'Data-entry'), 
     )
+    user = models.OneToOneField(User, blank=True, on_delete=models.CASCADE, null=True)
     employeeName = models.CharField(max_length=100)
     employeeEmail = models.EmailField(max_length=100, unique=True)
     employeePhone = models.CharField(max_length=10, unique=True)
@@ -112,6 +91,19 @@ class Employee(models.Model):
     def __str__(self):
         return f'{self.employeeName}'
 
+class StudentPosition(models.Model):
+    POSITION =(
+        ('Continuing', 'Continuing'),
+        ('Graduate', 'Graduate'),
+        ('Undergraduate', 'Undergraduate'),
+        ('Completed', 'Completed'),
+        ('Discontinued', 'Discontinued'),
+    )
+    student = models.OneToOneField(Student, on_delete=models.CASCADE)
+    position = models.CharField(max_length=25, choices=POSITION)
+    date_added = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return f'{self.student}'
 
 
