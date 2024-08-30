@@ -26,3 +26,12 @@ class StudentFilter(django_filters.FilterSet):
     class Meta:
         model = Student
         fields = ['gender']
+class IntermediaryFilter(django_filters.FilterSet):
+    class Meta:
+        model = Intermediary
+        fields = ['intermediaryName', 'location', 'date_added']
+
+class DonorFilter(django_filters.FilterSet):
+    class Meta:
+        model = Donor
+        fields = ['donorName']

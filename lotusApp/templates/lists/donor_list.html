@@ -17,14 +17,18 @@
 {% for message in messages %}
 <p id="message">{{message}}</p>
 {% endfor %}
+<form method= 'post'class="d-flex" role="search">
+  {% csrf_token %}
+  {{ myFilter.form.as_p }}
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
 <table style="margin-top: 20px;" class="table table-bordered">
     <thead>
       <tr>
-        <th scope="col">School ID</th>
-        <th scope="col">School Name</th>
+        <th scope="col">Donor ID</th>
+        <th scope="col">DonorName</th>
         <th scope="col">Email</th>
         <th scope="col">Phone</th>
-        <th scope="col">Location</th>
         <th scope="col">Date added</th>
         <th>Actions</th>
       </tr>
@@ -38,7 +42,6 @@
         <td>{{donor.donorName}}</td>
         <td>{{donor.donorEmail}}</td>
         <td>{{donor.donorPhone}}</td>
-        <td>{{donor.location}}</td>
         <td>{{donor.date_added}}</td>
         <td>
             <a href="{% url 'edit_donor' donor.id  %}" class="btn btn-primary">Edit</a>
