@@ -7,12 +7,26 @@ class StudentFilter(django_filters.FilterSet):
         ('Male', 'Male'),
         ('Female', 'Female'),
     )
-    name = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')
-    gender = django_filters.ChoiceFilter(choices=GENDER, label='Gender')
-    school = django_filters.ModelMultipleChoiceFilter(queryset=School.objects.all(), label='School')
-    intermediary = django_filters.ModelMultipleChoiceFilter(queryset=Intermediary.objects.all(), label='Intermediary')
-    donor = django_filters.ModelMultipleChoiceFilter(queryset=Donor.objects.all(), label='Donor')
+    LEVELofSUPPORT = (
+        ('PrimaryOnly', 'PrimaryOnly'),
+        ('Primary&Secondary', 'Primary&Secondary'),
+        ('Primary&Secondary&Tertiary', 'Primary&Secondary&Tertiary'),
+        ('Secondary&tertiary', 'Secondary&tertiary'),
+        ('TertiaryOnly', 'TertiaryOnly'),
+        ('SecondaryOnly', 'SecondaryOnly'),
+        ('Primary&Tertiary', 'Primany&Tertiary'),
+    )
+    POSITION=(
+        ('Continuing', 'Continuing'),
+        ('Graduate', 'Graduate'),
+        ('Undergraduate', 'Undergraduate'),
+        ('Completed', 'Completed'),
+        ('Discontinued', 'Discontinued'),   
+    )
+    studentName = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')
+    school = django_filters.CharFilter(lookup_expr='icontains', label='School')
+    position = django_filters.ChoiceFilter(choices=POSITION, label='Position') 
+    level = django_filters.ChoiceFilter(choices=LEVELofSUPPORT, label='Level of Support')
     class Meta:
         model = Student
         fields = ['gender']
-

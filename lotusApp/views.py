@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, SchoolForm, EmployeeForm
-from .models import School, Student, Donor, Intermediary, Employee
+from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm
+from .models import Student, Donor, Intermediary, Employee
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter
@@ -43,20 +43,17 @@ def dataentry(request):
 
     intermediaries = Intermediary.objects.all()
     intermediary_count = intermediaries.count()
-
-    schools = School.objects.all()
-    school_count = schools.count()
-
-    context = {'students':students, 'student_count':student_count, 'intermediaries': intermediaries, 'intermediary_count': intermediary_count, 'schools': schools, 'school_count': school_count}
+    context = {'students':students, 'student_count':student_count, 'intermediaries': intermediaries, 'intermediary_count': intermediary_count}
     return render(request, 'User_pages/dataentry.html', context)
 
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def students(request):
     students = Student.objects.all().order_by('id')
-    my_filter = StudentFilter(request.POST, queryset=students)
-    students = my_filter.qs
-    context = {'students':students, 'my_filter':my_filter}
+    myFilter = StudentFilter(requeDataentry, queryset=students)
+    students = myFilter.qs
+    
+    context = {'students':students, 'myFilter': myFilter}
     return render(request, 'lists/student_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
@@ -102,13 +99,13 @@ def student_delete(request, pk):
     context = {'student':student}
     return render(request, 'delete_templates/student_delete.html', context)
 @login_required
-@allowed_users(allowed_roles=['Finance'])
+@allowed_users(allowed_roles=['Dataentry'])
 def intermediaries(request):
     intermediaries = Intermediary.objects.all().order_by('id')
     context = {'intermediaries':intermediaries}
     return render(request, 'lists/intermediary_list.html', context)
 @login_required
-@allowed_users(allowed_roles=['Finance'])
+@allowed_users(allowed_roles=['Dataentry'])
 def add_intermediary(request):
     if request.method == 'POST':
         form = IntermediaryForm(request.POST)
@@ -124,7 +121,7 @@ def add_intermediary(request):
     form = IntermediaryForm()
     return render(request, 'add_templates/add_intermediary.html', {'form': form})
 @login_required
-@allowed_users(allowed_roles=['Finance'])   
+@allowed_users(allowed_roles=['Dataentry'])   
 def edit_intermediary(request, pk):
     intermediary = Intermediary.objects.get(id=pk)
     form = IntermediaryForm(instance=intermediary)
@@ -146,6 +143,7 @@ def intermediary_delete(request, pk):
         return redirect('intermediaries')
     context = {'intermediary':intermediary}
     return render(request, 'delete_templates/intermediary_delete.html', context)
+'''
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def schools(request):
@@ -190,6 +188,7 @@ def school_delete(request, pk):
         return redirect('schools')
     context = {'school':school}
     return render(request, 'delete_templates/school_delete.html', context)
+'''
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def finance(request):

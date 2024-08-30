@@ -1,4 +1,4 @@
-from .models import Student, Donor, Intermediary, School, Employee
+from .models import Student, Donor, Intermediary, Employee
 from django.forms import ModelForm
 
 class StudentForm(ModelForm):
@@ -18,13 +18,6 @@ class IntermediaryForm(ModelForm):
         model = Intermediary
         fields = '__all__'
         exclude = ['date_added']
-
-class SchoolForm(ModelForm):
-    class Meta:
-        model = School
-        fields = '__all__'
-        exclude = ['date_added']
-
 class EmployeeForm(ModelForm):
     class Meta:
         model = Employee
