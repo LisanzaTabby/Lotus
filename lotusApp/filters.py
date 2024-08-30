@@ -3,10 +3,6 @@ from django_filters import *
 from .models import *
 
 class StudentFilter(django_filters.FilterSet):
-    GENDER = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-    )
     LEVELofSUPPORT = (
         ('PrimaryOnly', 'PrimaryOnly'),
         ('Primary&Secondary', 'Primary&Secondary'),
