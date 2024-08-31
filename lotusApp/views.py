@@ -6,7 +6,7 @@ from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm
 from .models import Student, Donor, Intermediary, Employee
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
-from .filters import StudentFilter
+from .filters import StudentFilter, IntermediaryFilter, DonorFilter
 # Create your views here.
 @unauthenticated_user
 def index(request):
@@ -27,7 +27,7 @@ def user_login(request):
                 return redirect('finance')
             elif user.groups.filter(name='Donor').exists():
                 login(request, user)
-                return redirect('donor')
+                return redirect('donor_view')
             else:
                 messages.info(request, 'You are not authorized to access this page!')
         else:
@@ -50,7 +50,7 @@ def dataentry(request):
 @allowed_users(allowed_roles=['Dataentry'])
 def students(request):
     students = Student.objects.all().order_by('id')
-    myFilter = StudentFilter(requeDataentry, queryset=students)
+    myFilter = StudentFilter(request.POST, queryset=students)
     students = myFilter.qs
     
     context = {'students':students, 'myFilter': myFilter}
@@ -102,7 +102,9 @@ def student_delete(request, pk):
 @allowed_users(allowed_roles=['Dataentry'])
 def intermediaries(request):
     intermediaries = Intermediary.objects.all().order_by('id')
-    context = {'intermediaries':intermediaries}
+    myFilter = IntermediaryFilter(request.POST, queryset=intermediaries)
+    intermediaries = myFilter.qs
+    context = {'intermediaries':intermediaries, 'myFilter':myFilter}
     return render(request, 'lists/intermediary_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
@@ -221,7 +223,9 @@ def add_donor(request):
 @allowed_users(allowed_roles=['Finance'])
 def donor_list(request):
     donors = Donor.objects.all()
-    context = {'donors':donors}
+    myFilter = DonorFilter(request.POST, queryset=donors)
+    donors = myFilter.qs
+    context = {'donors':donors, 'myFilter': myFilter}
     return render(request, 'lists/donor_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Finance'])
@@ -289,6 +293,10 @@ def employee_delete(request, pk):
         return redirect('employee_list')
     context = {'employee':employee}
     return render(request, 'delete_templates/employee_delete.html', context)
+@allowed_users(allowed_roles=['Donor'])
+def donor_view(request):
+    context = {}
+    return render(request, 'User_pages/donor.html', context)
 # logout function
 def logout_view(request):
     logout(request)

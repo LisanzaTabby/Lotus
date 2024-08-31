@@ -3,10 +3,6 @@ from django_filters import *
 from .models import *
 
 class StudentFilter(django_filters.FilterSet):
-    GENDER = (
-        ('Male', 'Male'),
-        ('Female', 'Female'),
-    )
     LEVELofSUPPORT = (
         ('PrimaryOnly', 'PrimaryOnly'),
         ('Primary&Secondary', 'Primary&Secondary'),
@@ -30,3 +26,12 @@ class StudentFilter(django_filters.FilterSet):
     class Meta:
         model = Student
         fields = ['gender']
+class IntermediaryFilter(django_filters.FilterSet):
+    class Meta:
+        model = Intermediary
+        fields = ['intermediaryName', 'location', 'date_added']
+
+class DonorFilter(django_filters.FilterSet):
+    class Meta:
+        model = Donor
+        fields = ['donorName']
