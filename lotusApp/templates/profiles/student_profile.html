@@ -26,7 +26,51 @@
             <p>Date of Birth: {{student.dateofbirth}}</p>
           BackGround Information:
                 <p>{{ student.backgroundInfo }}</p>
-          Date added : {{ student.date_added}}
+                Date added : {{ student.date_added}}
+        <div class="progress">
+            <h3>Academic Progress</h3>
+            <ul>
+                {% if academicprogress.year.2023 %}
+                <li>2023: {{ academicprogress.year }}</li>
+                {% else %}
+                <li>2023: </li>
+                {% endif %}
+                {% if academicprogress.year.2024 %}
+                <li>2024: {{ academicprogress.year }}</li>
+                {% else %}
+                <li>2024: </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="results">
+            <h3>Exam Results</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exam</th>
+                        <th>Subject</th>
+                        <th>Score</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+            {% if examresults %}
+                {% for result in examresults %}
+                <tbody>
+                    <tr>
+                        <td>{{ result.exam.exam_name }}</td>
+                        <td>{{ result.subject}}</td>
+                        <td>{{ result.score}}</td>
+                        <td>{{ result.grade}}</td>
+                    </tr>
+                </tbody>
+                {% endfor %}
+            {% else %}
+            <tr>
+                <td>No results</td>
+            </tr>
+            {% endif %}                
+            </table>
+        </div>
          
 </div>
 
