@@ -2,8 +2,8 @@ from django.shortcuts import render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm
-from .models import Student, Donor, Intermediary, Employee
+from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, AcademicProgressForm,ExamResultsForm,ExamForm
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress, School
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter
@@ -73,7 +73,9 @@ def add_student(request):
 @login_required
 def student_profile(request, pk):
     student = Student.objects.get(id=pk)
-    context = {'student': student}
+    academicprogress = AcademicProgress.objects.filter(student=student).first()
+    examresults = ExamResults.objects.filter(student=student).select_related('exam')
+    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults}
     return render(request, 'profiles/student_profile.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 
@@ -297,6 +299,63 @@ def employee_delete(request, pk):
 def donor_view(request):
     context = {}
     return render(request, 'User_pages/donor.html', context)
+# student updation actions
+def update_academic_progress(request, pk):
+    student = Student.objects.get(id = pk)
+    form = AcademicProgressForm(instance=student)
+    if request.method == 'POST':
+        form = AcademicProgressForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Academic Progress saved successfully!')
+            return redirect('student_profile')
+    return render(request, 'add/add_academic_progress.html',{'form':form,'student':student})
+def add_exam(request):
+    if request.method == 'POST':
+        form = ExamForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Exam Added Successfully!')
+            return redirect('exam_list')
+    form = ExamForm()
+    context = {'form':form}
+    return render(request, 'add_templates/add_exam.html',context)
+def exams(request):
+    exams = Exam.objects.all().order_by('id')
+    context = {'exams':exams}
+    return render(request,'lists/exam_list.html', context)
+def update_exam_results(request, pk):
+    student = Student.objects.get(id=pk)
+    form = ExamResultsForm(instance=student)
+    if request.method == 'POST':
+        form = ExamResultsForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            messages.success(request,'Exam Results Updated SuccessFully!')
+            return redirect('student_profile')
+    context = {'form':form,'student':student}
+    return render(request, 'add_templates/add_exam_results.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # logout function
 def logout_view(request):
     logout(request)
