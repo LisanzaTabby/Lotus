@@ -29,6 +29,7 @@ urlpatterns = [
     path('add_donor/', views.add_donor, name='add_donor'),
     path('edit_donor/<str:pk>/', views.edit_donor, name='edit_donor'),
     path('delete_donor/<str:pk>/', views.donor_delete, name='delete_donor'),
+    path('add_fee_commitment/<str:pk>/', views.add_fee_commitment, name='add_fee_commitment'),
     path('employee_list/', views.employee_list, name='employee_list'),
     path('add_employee/', views.add_employee, name='add_employee'),
     path('edit_employee/<str:pk>/', views.edit_employee, name='edit_employee'),

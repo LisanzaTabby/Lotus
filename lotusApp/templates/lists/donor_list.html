@@ -45,12 +45,13 @@
         <td>{{donor.date_added}}</td>
         <td>
             <a href="{% url 'edit_donor' donor.id  %}" class="btn btn-primary">Edit</a>
+            <a href="{% url 'add_fee_commitment' donor.id  %}" class="btn btn-primary">Add Fee Commitment</a>
             <a href="{% url 'delete_donor' donor.id  %}" class="btn btn-danger">Delete</a>
             
         </td>
       </tr>
-    </tbody>
     {% endfor %}
+    </tbody>
     {% else %}
     <tbody>
       <tr>
