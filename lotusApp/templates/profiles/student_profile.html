@@ -16,6 +16,12 @@
         border-radius: 50%;
         
     }
+    .progress{
+        padding:40px; 
+        background-color: aqua;      
+    }
+
+    
 </style>
 <div class="main">
             <img class="profilepic"style="align-items: center;" src="{{ student.profilePic.url }}" alt="studentProfilePhoto">
@@ -23,54 +29,91 @@
             <p>Gender: {{student.gender}}</p>
             <p>Donor: {{ student.donor }}</p>
             <p>Intermediary: {{ student.intermediary}}</p>
+            <p>Position: {{ student.position}}</p>
+            <p>Status: {{ student.status}}</p>      
+            <p>Primary School: {{ student.primary_school}}</p>
+            <p>Secondary School: {{ student.secondary_school}}</p>
+            <p>Tertiary School: {{ student.tertiary_school}}</p>
+            <p>Class Level: {{ student.class_level}}</p>
             <p>Date of Birth: {{student.dateofbirth}}</p>
           BackGround Information:
                 <p>{{ student.backgroundInfo }}</p>
                 Date added : {{ student.date_added}}
-        <div class="progress">
             <h3>Academic Progress</h3>
-            <ul>
-                {% if academicprogress.year.2023 %}
-                <li>2023: {{ academicprogress.year }}</li>
-                {% else %}
-                <li>2023: </li>
-                {% endif %}
-                {% if academicprogress.year.2024 %}
-                <li>2024: {{ academicprogress.year }}</li>
-                {% else %}
-                <li>2024: </li>
-                {% endif %}
-            </ul>
-        </div>
-        <div class="results">
-            <h3>Exam Results</h3>
-            <table>
+            <table style="margin-top: 20px;" class="table table-bordered">
                 <thead>
-                    <tr>
-                        <th>Exam</th>
-                        <th>Subject</th>
-                        <th>Score</th>
-                        <th>Grade</th>
-                    </tr>
+                  <tr>
+                    <th scope="col">Academic Year</th>
+                    <th scope="col">Progress</th>                    
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2023</td>
+                    {% if academicprogress.year == 2023 %}
+                    <td>{{ academicprogress.class_level }}</td>
+                    {% else %}
+                    <td> </td>
+                    {% endif %}
+                    {% if request.user.groups.filter(name='Dataentry')%}
+                    <td>
+                        <a href="{% url 'update_academic_progress' student.id %}"class="btn btn-primary">Update</a>                        
+                    </td>
+                    {% endif %}
+
+                  </tr>
+                  <tr>
+                    <td>2024</td>
+                    {% if academicprogress.year.2024 %}
+                    <td>{{ academicprogress.class_level }}</td>
+                    {% else %}
+                    <td> </td>
+                    {% endif %}
+                    {% if request.user.groups.filter(name='Dataentry') %}
+
+                    <td>
+                        <a href="{% url 'update_academic_progress' student.id %}"class="btn btn-primary">Update</a>                        
+                    </td>
+                    {% endif %}
+
+                  </tr>
+                  
+            
+              </table>
+                    
+            <h3>Exam Results</h3>
+            <table style="margin-top: 20px;" class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col">Exam</th>
+                    <th scope="col">Subject</th>                    
+                    <th scope="col">Score</th>                    
+                    <th scope="col">Grade</th>                    
+                    <th>Actions</th>
+                  </tr>
                 </thead>
             {% if examresults %}
                 {% for result in examresults %}
                 <tbody>
-                    <tr>
-                        <td>{{ result.exam.exam_name }}</td>
+                  <tr>
+                    <td>{{ result.exam.exam_name }}</td>
                         <td>{{ result.subject}}</td>
                         <td>{{ result.score}}</td>
                         <td>{{ result.grade}}</td>
-                    </tr>
-                </tbody>
-                {% endfor %}
+                    <td>
+                        <a href=""class="btn btn-primary">Edit</a>                        
+                    </td>
+                  </tr>
+                  {% endfor %}
             {% else %}
             <tr>
-                <td>No results</td>
+                <td>No Exam results Found</td>
             </tr>
-            {% endif %}                
+            {% endif %}                 
+            
             </table>
-        </div>
+            
          
 </div>
 

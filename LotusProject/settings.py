@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'LotusProject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'sms',
+        'NAME': 'sms_lotus',
         'USER': 'postgres',
         'PASSWORD': 'lisanza123',
         'HOST': '127.0.0.1',
