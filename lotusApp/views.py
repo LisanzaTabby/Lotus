@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm
+from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm,FeeCommitmentForm
 from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
@@ -47,13 +47,15 @@ def dataentry(request):
     return render(request, 'User_pages/dataentry.html', context)
 
 @login_required
-@allowed_users(allowed_roles=['Dataentry'])
+@allowed_users(allowed_roles=['Dataentry', 'Finance'])
 def students(request):
     students = Student.objects.all().order_by('id')
     myFilter = StudentFilter(request.POST, queryset=students)
     students = myFilter.qs
-    
-    context = {'students':students, 'myFilter': myFilter}
+
+    is_finance = request.user.groups.filter(name='Finance').exists()
+    is_dataentry = request.user.groups.filter(name='Dataentry').exists()
+    context = {'students':students, 'myFilter': myFilter, 'is_finance':is_finance, 'is_dataentry':is_dataentry}
     return render(request, 'lists/student_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
@@ -75,7 +77,9 @@ def student_profile(request, pk):
     student = Student.objects.get(id=pk)
     academicprogress = AcademicProgress.objects.filter(student=student).first()
     examresults = ExamResults.objects.filter(student=student).select_related('exam')
-    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults}
+    
+    is_dataentry = request.user.groups.filter(name='Dataentry').exists()
+    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry}
     return render(request, 'profiles/student_profile.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 
@@ -202,8 +206,10 @@ def finance(request):
 
     donors = Donor.objects.all()
     donor_count = donors.count()
+    students = Student.objects.all()
+    student_count = students.count()
 
-    context = {'employees':employees, 'employee_count':employee_count, 'donors': donors, 'donor_count': donor_count}
+    context = {'employees':employees, 'employee_count':employee_count, 'donors': donors, 'donor_count': donor_count,'students':students,'student_count':student_count}
     return render(request, 'User_pages/finance.html', context)
 #finance actions
 #finance pages access
@@ -228,6 +234,7 @@ def donor_list(request):
     donors = Donor.objects.all()
     myFilter = DonorFilter(request.POST, queryset=donors)
     donors = myFilter.qs
+
     context = {'donors':donors, 'myFilter': myFilter}
     return render(request, 'lists/donor_list.html', context)
 @login_required
@@ -296,6 +303,24 @@ def employee_delete(request, pk):
         return redirect('employee_list')
     context = {'employee':employee}
     return render(request, 'delete_templates/employee_delete.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
+def add_fee_commitment(request, pk):
+    donor = Donor.objects.get(id=pk)
+    form = FeeCommitmentForm(instance=donor)
+    if request.method =='POST':
+        form = FeeCommitmentForm(request.POST,instance=donor)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Fee Commitment Added SuccessFully!')
+            return redirect('donor_list')
+        else:
+            print(form.errors)
+            messages.error(request, 'Invalid Form')
+            return render(request, 'add_templates/add_fee_commitment.html', {'form': form})
+    context = {'form':form}
+    return render(request, 'add_templates/add_fee_commitment.html', context)
+
 @login_required
 @allowed_users(allowed_roles=['Donor'])
 def donor_view(request):
