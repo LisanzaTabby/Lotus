@@ -12,17 +12,12 @@ class StudentFilter(django_filters.FilterSet):
         ('SecondaryOnly', 'SecondaryOnly'),
         ('Primary&Tertiary', 'Primany&Tertiary'),
     )
-    POSITION=(
-        ('Continuing', 'Continuing'),
-        ('Graduate', 'Graduate'),
-        ('Undergraduate', 'Undergraduate'),
-        ('Completed', 'Completed'),
-        ('Discontinued', 'Discontinued'),   
-    )
     studentName = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')
-    school = django_filters.CharFilter(lookup_expr='icontains', label='School')
-    position = django_filters.ChoiceFilter(choices=POSITION, label='Position') 
-    level = django_filters.ChoiceFilter(choices=LEVELofSUPPORT, label='Level of Support')
+    donor = django_filters.ModelChoiceFilter(queryset=Donor.objects.all(), label='Donor')
+    intermediary = django_filters.ModelChoiceFilter(queryset=Intermediary.objects.all(), label='Intermediary')
+    primary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Primary School')
+    secondary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Secondary School')
+    tertiary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Tertiary School')
     class Meta:
         model = Student
         fields = ['gender']

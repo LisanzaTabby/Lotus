@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, AcademicProgressForm,ExamResultsForm,ExamForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress, School
+from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter
@@ -119,6 +119,7 @@ def add_intermediary(request):
             messages.info(request, 'Intermediary added Successfully!')
             return redirect('intermediaries')
         else:
+            print(form.errors)
             messages.error(request, 'Invalid form')
             return render(request, 'add_templates/add_intermediary.html', {'form': form})
         
@@ -147,7 +148,7 @@ def intermediary_delete(request, pk):
         return redirect('intermediaries')
     context = {'intermediary':intermediary}
     return render(request, 'delete_templates/intermediary_delete.html', context)
-'''
+
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def schools(request):
@@ -164,7 +165,7 @@ def add_school(request):
             messages.info(request, 'School added Successfully!')
             return redirect('schools')
         else:
-            messages.error(request, 'Invalid Form')
+            messages.error(request, form.errors)
             return render(request, 'add_templates/add_school.html', {'form': form})
         
     form = SchoolForm()
@@ -192,7 +193,7 @@ def school_delete(request, pk):
         return redirect('schools')
     context = {'school':school}
     return render(request, 'delete_templates/school_delete.html', context)
-'''
+
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def finance(request):
@@ -295,21 +296,46 @@ def employee_delete(request, pk):
         return redirect('employee_list')
     context = {'employee':employee}
     return render(request, 'delete_templates/employee_delete.html', context)
+@login_required
 @allowed_users(allowed_roles=['Donor'])
 def donor_view(request):
-    context = {}
+    students = Student.objects.filter(donor=request.user)
+    student_count = students.count()
+
+    context = {'students':students, 'student_count':student_count}
     return render(request, 'User_pages/donor.html', context)
+@login_required
+@allowed_users(allowed_roles=['Donor'])
+def donor_specific_students(request):
+    students = Student.objects.filter(donor=request.user)
+    context = {'students':students}
+    return render(request, 'lists/donor_specific_students.html', context)
 # student updation actions
 def update_academic_progress(request, pk):
-    student = Student.objects.get(id = pk)
-    form = AcademicProgressForm(instance=student)
+    student = get_object_or_404(Student, id=pk)
+
+    # Get the academic progress instance or create one if it doesn't exist
+    progress, created = AcademicProgress.objects.get_or_create(student=student)
+
     if request.method == 'POST':
-        form = AcademicProgressForm(request.POST, instance=student)
-        if form.is_valid():
-            form.save()
+        try:
+            year = int(request.POST.get('year'))
+            class_level = request.POST.get('class_level')
+
+            # Make sure the class_level is valid before proceeding
+            if not class_level:
+                messages.error(request, 'Class level is required.')
+                return render(request, 'add_templates/add_academic_progress.html', {'progress': progress, 'student': student})
+
+            progress.update_progress(year, class_level)
             messages.success(request, 'Academic Progress saved successfully!')
-            return redirect('student_profile')
-    return render(request, 'add/add_academic_progress.html',{'form':form,'student':student})
+            return redirect('student_profile', pk=pk)
+        except ValueError:
+            messages.error(request, 'Invalid input for year.')
+        except Exception as e:
+            messages.error(request, f'An error occurred: {str(e)}')
+
+    return render(request, 'add_templates/add_academic_progress.html', {'progress': progress, 'student': student})
 def add_exam(request):
     if request.method == 'POST':
         form = ExamForm(request.POST)
