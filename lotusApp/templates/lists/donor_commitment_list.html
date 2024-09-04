@@ -1,0 +1,60 @@
+{% extends 'navbars/financeactions.html' %}
+{% block content %}
+<style>
+    h2{
+        text-align: center;
+        text-transform: uppercase;
+    }
+    #message{
+        text-align: center;
+        color: blue;
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 10px;
+    }
+</style>
+<h2>Donor commitment page</h2>
+{% for message in messages %}
+<p id="message">{{message}}</p>
+{% endfor %}
+<form method= 'post'class="d-flex" role="search">
+  {% csrf_token %}
+  {{ myFilter.form.as_p }}
+  <button class="btn btn-primary" type="submit">Search</button>
+</form>
+<table style="margin-top: 20px;" class="table table-bordered">
+    <thead>
+      <tr>
+        <th scope="col">Donor ID</th>
+        <th scope="col">DonorName</th>
+        <th scope="col">Commitment Amount</th>
+        <th scope="col">Commitment Year</th>
+        <th scope="col">Date added</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    {% if commitments %}
+
+    {% for commitment in commitments %}
+    <tbody>
+      <tr>
+        <td>{{commitment.donor.id}}</td>
+        <td>{{commitment.donor.username}}</td>
+        <td>{{commitment.amount}}</td>
+        <td>{{commitment.year}}</td>
+        <td>{{commitment.date_added}}</td>
+        <td>
+            <a href="{% url 'edit_donor_commitment' commitment.id %}" class="btn btn-primary">Edit Commitment</a>            
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+    {% else %}
+    <tbody>
+      <tr>
+        <td colspan="6">No Commitments found</td>
+      </tr>
+    </tbody>
+    {% endif %}
+  </table>
+{% endblock %}

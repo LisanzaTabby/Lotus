@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm,FeeCommitmentForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,FeeCommitment
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter
@@ -231,7 +231,7 @@ def add_donor(request):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def donor_list(request):
-    donors = Donor.objects.all()
+    donors = Donor.objects.all().order_by('id')
     myFilter = DonorFilter(request.POST, queryset=donors)
     donors = myFilter.qs
 
@@ -307,27 +307,56 @@ def employee_delete(request, pk):
 @allowed_users(allowed_roles=['Finance'])
 def add_fee_commitment(request, pk):
     donor = Donor.objects.get(id=pk)
-    form = FeeCommitmentForm(instance=donor)
-    if request.method =='POST':
-        form = FeeCommitmentForm(request.POST,instance=donor)
+    
+    # If the form is used to create or update FeeCommitment, do not pass donor as an instance.
+    if request.method == 'POST':
+        form = FeeCommitmentForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.info(request, 'Fee Commitment Added SuccessFully!')
-            return redirect('donor_list')
+            fee_commitment = form.save(commit=False)
+            fee_commitment.donor = donor  # Link the donor to the fee commitment
+            fee_commitment.save()
+            messages.info(request, 'Fee Commitment Added Successfully!')
+            return redirect('donor_commitment_list')
         else:
             print(form.errors)
             messages.error(request, 'Invalid Form')
-            return render(request, 'add_templates/add_fee_commitment.html', {'form': form})
+    else:
+        form = FeeCommitmentForm()  # No instance if creating a new one
+
+    context = {'form': form}
+    return render(request, 'add_templates/add_fee_commitment.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
+def donor_commitment_list(request):
+    commitments = FeeCommitment.objects.all().order_by('id')
+    context = {'commitments':commitments}
+    return render(request, 'lists/donor_commitment_list.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
+def edit_donor_commitment(request, pk):
+    commitment = FeeCommitment.objects.get(id=pk)
+    form = FeeCommitmentForm(instance=commitment)
+    if request.method =='POST':
+        form = FeeCommitmentForm(request.POST,instance=commitment)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Donor Commitment Information Updated SuccessFully!')
+            return redirect('donor_commitment_list')
     context = {'form':form}
     return render(request, 'add_templates/add_fee_commitment.html', context)
-
 @login_required
 @allowed_users(allowed_roles=['Donor'])
 def donor_view(request):
     students = Student.objects.filter(donor=request.user)
     student_count = students.count()
+    commitments = FeeCommitment.objects.filter(donor=request.user)
 
-    context = {'students':students, 'student_count':student_count}
+    # Debugging
+    for commitment in commitments:
+
+        print(f"Commitment ID: {commitment.id}, Amount: {commitment.amount}")
+
+    context = {'students':students, 'student_count':student_count, 'commitment':commitment}
     return render(request, 'User_pages/donor.html', context)
 @login_required
 @allowed_users(allowed_roles=['Donor'])
