@@ -39,4 +39,6 @@ urlpatterns = [
     path('donor_view/', views.donor_view, name='donor_view'),
     path('donor_specific_students/', views.donor_specific_students, name='donor_specific_students'),
     path('logout/', views.logout_view, name='logout'),
+
+    path('forgot_password/', views.forgot_password, name='forgot_password'),
 ]

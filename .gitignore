@@ -1,5 +1,2 @@
 __pycache__/
-media/student_pics/profile_pics/*.jpg
-media/student_pics/profile_pics/*.png
-media/student_pics/profile_pics/*.jpeg
-media/student_pics/profile_pics/*.gif   
+media

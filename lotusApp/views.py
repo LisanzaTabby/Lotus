@@ -7,6 +7,8 @@ from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, A
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter
+from django.http import HttpResponse
+
 # Create your views here.
 @unauthenticated_user
 def index(request):
@@ -415,28 +417,10 @@ def update_exam_results(request, pk):
             return redirect('student_profile')
     context = {'form':form,'student':student}
     return render(request, 'add_templates/add_exam_results.html', context)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # logout function
 def logout_view(request):
     logout(request)
     return redirect('login')
+# Password reset
+def forgot_password(request):
+    return HttpResponse("Feature is Under Development!")
