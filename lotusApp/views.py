@@ -2,12 +2,13 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm,FeeCommitmentForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,FeeCommitment
+from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm, FeesForm
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter
 from django.http import HttpResponse
+from django.db.models import Sum
 
 # Create your views here.
 @unauthenticated_user
@@ -43,9 +44,12 @@ def dataentry(request):
     students = Student.objects.all()
     student_count = students.count()
 
+    schools = School.objects.all()
+    schools_count = schools.count()
+
     intermediaries = Intermediary.objects.all()
     intermediary_count = intermediaries.count()
-    context = {'students':students, 'student_count':student_count, 'intermediaries': intermediaries, 'intermediary_count': intermediary_count}
+    context = {'students':students, 'student_count':student_count, 'intermediaries': intermediaries, 'intermediary_count': intermediary_count,'schools_count':schools_count}
     return render(request, 'User_pages/dataentry.html', context)
 
 @login_required
@@ -211,7 +215,12 @@ def finance(request):
     students = Student.objects.all()
     student_count = students.count()
 
-    context = {'employees':employees, 'employee_count':employee_count, 'donors': donors, 'donor_count': donor_count,'students':students,'student_count':student_count}
+    fees = Fees.objects.all()
+    total_committed = fees.aggregate(total_committed=Sum('committed_amount'))['total_committed'] or 0
+    total_contributed = fees.aggregate(total_contributed=Sum('contributed_amount'))['total_contributed'] or 0
+
+
+    context = {'employees':employees, 'employee_count':employee_count, 'donors': donors, 'donor_count': donor_count,'students':students,'student_count':student_count,'fees':fees,'total_committed':total_committed,'total_contributed':total_contributed}
     return render(request, 'User_pages/finance.html', context)
 #finance actions
 #finance pages access
@@ -264,6 +273,26 @@ def donor_delete(request, pk):
     return render(request, 'delete_templates/donor_delete.html', context)
 @login_required
 @allowed_users(allowed_roles=['Finance'])
+def add_fee_commitment(request):
+    if request.method == 'POST':
+        form = FeesForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Donor Fee Commitment Saved Successfully!')
+            return redirect('donor_commitment_list')
+        else:
+            messages.error(request, 'Invalid Form')
+            return render(request, 'add_templates/add_fee_commitment.html',{'form':form})
+    form=FeesForm()
+    return render(request, 'add_templates/add_fee_commitment.html',{'form':form})
+@login_required
+@allowed_users(allowed_roles=['Finance'])
+def donor_commitment_list(request):
+    fees = Fees.objects.all().order_by('id')
+    context = {'fees':fees}
+    return render(request, 'lists/donor_commitment_list.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -305,53 +334,13 @@ def employee_delete(request, pk):
         return redirect('employee_list')
     context = {'employee':employee}
     return render(request, 'delete_templates/employee_delete.html', context)
-@login_required
-@allowed_users(allowed_roles=['Finance'])
-def add_fee_commitment(request, pk):
-    donor = Donor.objects.get(id=pk)
-    
-    # If the form is used to create or update FeeCommitment, do not pass donor as an instance.
-    if request.method == 'POST':
-        form = FeeCommitmentForm(request.POST)
-        if form.is_valid():
-            fee_commitment = form.save(commit=False)
-            fee_commitment.donor = donor  # Link the donor to the fee commitment
-            fee_commitment.save()
-            messages.info(request, 'Fee Commitment Added Successfully!')
-            return redirect('donor_commitment_list')
-        else:
-            print(form.errors)
-            messages.error(request, 'Invalid Form')
-    else:
-        form = FeeCommitmentForm()  # No instance if creating a new one
 
-    context = {'form': form}
-    return render(request, 'add_templates/add_fee_commitment.html', context)
-@login_required
-@allowed_users(allowed_roles=['Finance'])
-def donor_commitment_list(request):
-    commitments = FeeCommitment.objects.all().order_by('id')
-    context = {'commitments':commitments}
-    return render(request, 'lists/donor_commitment_list.html', context)
-@login_required
-@allowed_users(allowed_roles=['Finance'])
-def edit_donor_commitment(request, pk):
-    commitment = FeeCommitment.objects.get(id=pk)
-    form = FeeCommitmentForm(instance=commitment)
-    if request.method =='POST':
-        form = FeeCommitmentForm(request.POST,instance=commitment)
-        if form.is_valid():
-            form.save()
-            messages.info(request, 'Donor Commitment Information Updated SuccessFully!')
-            return redirect('donor_commitment_list')
-    context = {'form':form}
-    return render(request, 'add_templates/add_fee_commitment.html', context)
 @login_required
 @allowed_users(allowed_roles=['Donor'])
 def donor_view(request):
     students = Student.objects.filter(donor=request.user)
     student_count = students.count()
-    commitments = FeeCommitment.objects.filter(donor=request.user)
+    commitments = Fees.objects.filter(donor=request.user)
 
     # Debugging
     for commitment in commitments:

@@ -27,24 +27,26 @@
       <tr>
         <th scope="col">Donor ID</th>
         <th scope="col">DonorName</th>
-        <th scope="col">Commitment Amount</th>
+        <th scope="col">Committed Amount</th>
+        <th scope="col">Contributed Amount</th>
         <th scope="col">Commitment Year</th>
         <th scope="col">Date added</th>
         <th>Actions</th>
       </tr>
     </thead>
-    {% if commitments %}
+    {% if fees %}
 
-    {% for commitment in commitments %}
+    {% for fees in fees %}
     <tbody>
       <tr>
-        <td>{{commitment.donor.id}}</td>
-        <td>{{commitment.donor.username}}</td>
-        <td>{{commitment.amount}}</td>
-        <td>{{commitment.year}}</td>
-        <td>{{commitment.date_added}}</td>
+        <td>{{fees.donor.id}}</td>
+        <td>{{fees.donor.donorName}}</td>
+        <td>{{fees.committed_amount}}</td>
+        <td>{{fees.contributed_amount}}</td>
+        <td>{{fees.year}}</td>
+        <td>{{fees.date_added}}</td>
         <td>
-            <a href="{% url 'edit_donor_commitment' commitment.id %}" class="btn btn-primary">Edit Commitment</a>            
+            <a href="" class="btn btn-primary">Edit Commitment</a>            
         </td>
       </tr>
     {% endfor %}
@@ -57,4 +59,6 @@
     </tbody>
     {% endif %}
   </table>
+  <a href="{% url 'add_fee_commitment' %}" class="btn btn-primary">Add Fee Commitment</a>
+
 {% endblock %}

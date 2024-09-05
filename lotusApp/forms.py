@@ -1,5 +1,6 @@
-from .models import Student, Donor, Intermediary, Employee, AcademicProgress, Exam, ExamResults, School, FeeCommitment
+from .models import Student, Donor, Intermediary, Employee, AcademicProgress, Exam, ExamResults, School, Fees
 from django.forms import ModelForm
+from django import forms
 
 class StudentForm(ModelForm):
     class Meta:
@@ -11,7 +12,21 @@ class DonorForm(ModelForm):
         model = Donor
         fields = '__all__'
         exclude = ['date_added']
+class FeesForm(ModelForm):
+    class Meta:
+        model = Fees
+        fields = '__all__'
+        exclude = ['date_added']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        donor = cleaned_data.get('donor')
+        year = cleaned_data.get('year')
+
+        if Fees.objects.filter(donor=donor, year=year).exists():
+            raise forms.ValidationError(f"Fees record for {donor} in year {year} already exists.")
+        
+        return cleaned_data
 class IntermediaryForm(ModelForm):
     class Meta:
         model = Intermediary
@@ -40,10 +55,3 @@ class ExamResultsForm(ModelForm):
     class Meta:
         model = ExamResults
         fields = '__all__'
-
-class FeeCommitmentForm(ModelForm):
-    class Meta:
-        model = FeeCommitment
-        fields = '__all__'
-        exclude = ['date_added']
-

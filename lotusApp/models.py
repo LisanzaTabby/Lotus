@@ -1,6 +1,7 @@
 from datetime import timezone
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Sum
 
 # Create your models here.
 class Intermediary(models.Model):
@@ -39,7 +40,38 @@ class Donor(models.Model):
     
     def __str__(self):
         return f'{self.donorName}'
-        
+    def total_committed_fees(self):
+        return self.fees_amounts.aggregate(total_committed_fees=Sum('committed_amount'))['total_committed_fees'] or 0
+    def total_contributed_fees(self):
+        return self.fees_amounts.aggregate(total_contributed_fees=Sum('contributed_amount'))['total_contributed_fees'] or 0
+    def cumulative_fees(self, start_year, end_year):
+        fees = self.fees_amounts.all()
+        if start_year and end_year:
+            fees = fees.filter(year__gte=start_year, year__lte=end_year)
+        total_fees = fees.aggregate(
+            total_committed_amount = Sum('committed_amount'),
+            total_contributed_amount = Sum('contributed_amount')
+        )
+        return {
+            'total_committed_amount':total_fees['total_committed_amount'] or 0,
+            'total_contributed_amount': total_fees['total_contributed_amount'] or 0
+        }
+class Fees(models.Model):
+    donor = models.ForeignKey(Donor, related_name='fees_amounts', on_delete=models.CASCADE, null=True, blank= True)
+    year = models.PositiveIntegerField(null=True, blank= True)
+    committed_amount = models.DecimalField(max_digits = 12, decimal_places= 2, null=True, blank= True)
+    contributed_amount = models.DecimalField(max_digits = 12, decimal_places = 2, null=True, blank= True)
+    date_added = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('donor', 'year')
+    def __str__(self):
+        return f'{self.donor.donorName} {self.year}'
+
+    def total_committed(self):
+        return fees.objects.all().aggregate(total_committed=Sum('committed_amount'))['total_committed'] or 0
+    def total_contributed(self):
+        return fees.objects.all().aggregate(total_committed=Sum('committed_amount'))['total_committed'] or 0
 class School(models.Model):
     LEVEL=(
         ('Primary', 'Primary'),
@@ -175,17 +207,5 @@ class ExamResults(models.Model):
 
     def __str__(self):
         return f'{self.subject}, {self.score}'
-    
-class FeeCommitment(models.Model):
-    YEAR = (
-        ('2023','2023'),
-        ('2024','2024'),
-        ('2025','2025'),
-    )
-    donor = models.ForeignKey(User, on_delete=models.CASCADE)
-    amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)    
-    year = models.CharField(max_length=4, choices=YEAR, null=True, blank=True)
-    date_added = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.amount}'
+    
