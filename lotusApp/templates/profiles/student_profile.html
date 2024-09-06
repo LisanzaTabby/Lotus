@@ -1,4 +1,5 @@
-{% extends 'navbars/dataentrynavbar.html' %}
+{% extends 'base.html' %}
+
 {% block content %}
 <style>
     .main {
@@ -35,7 +36,6 @@
     <p>Class Level: {{ student.class_level }}</p>
     <p>Date of Birth: {{ student.dateofbirth }}</p>
     <p>Background Information: {{ student.backgroundInfo }}</p>
-    <p>Date added: {{ student.date_added }}</p>
 
     <h3>Academic Progress</h3>
     <table style="margin-top: 20px;" class="table table-bordered">
@@ -102,6 +102,7 @@
                 {% if is_dataentry %}
                 <td>
                     <a href="" class="btn btn-primary">Edit</a>
+                    <a href="" class="btn btn-danger">Delete</a>
                 </td>
                 {% endif %}
             </tr>
@@ -113,5 +114,49 @@
         </tr>
         {% endif %}
     </table>
+    {% if is_dataentry %}
+       <a href="" class="btn btn-primary">Add Results</a>        
+    {% endif %}
+
+    <h3>Fees Payments</h3>
+    <table style="margin-top: 20px;" class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">PaymentID</th>
+                <th scope="col">School Name</th>
+                <th scope="col">School Year</th>
+                <th scope="col">Amounts</th>
+                {% if is_finance %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        {% if fees_payments %}
+        <tbody>
+            {% for payment in fees_payments %}
+            <tr>
+                <td>{{ payment.id }}</td>
+                <td>{{ payment.school_name }}</td>
+                <td>{{ payment.school_year }}</td>
+                <td>{{ payment.amount }}</td>
+                {% if is_finance %}
+                <td>
+                    <a href="" class="btn btn-primary">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tr>
+            <td colspan="5">No Fees Payments Found</td>
+        </tr>
+        {% endif %}
+    </table>
+    
+    <p>Date added: {{ student.date_added }}</p>
+
+    <a href="{% url 'forgot_password' %}" class="btn btn-primary">Print Student Profile</a>
+
 </div>
 {% endblock %}

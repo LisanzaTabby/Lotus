@@ -1,4 +1,4 @@
-{% extends 'navbars/financeactions.html' %}
+{% extends 'navbars/financenavbar.html' %}
 {% block content %}
 <style>
     h2{
@@ -46,7 +46,8 @@
         <td>{{fees.year}}</td>
         <td>{{fees.date_added}}</td>
         <td>
-            <a href="" class="btn btn-primary">Edit Commitment</a>            
+            <a href="{% url 'edit_donor_commitment' fee.id %}" class="btn btn-primary">Edit </a>            
+            <a href="{% url 'delete_donor_commitment' fee.id %}" class="btn btn-danger">Delete</a>            
         </td>
       </tr>
     {% endfor %}

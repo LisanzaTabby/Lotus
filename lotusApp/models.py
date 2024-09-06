@@ -67,11 +67,6 @@ class Fees(models.Model):
         unique_together = ('donor', 'year')
     def __str__(self):
         return f'{self.donor.donorName} {self.year}'
-
-    def total_committed(self):
-        return fees.objects.all().aggregate(total_committed=Sum('committed_amount'))['total_committed'] or 0
-    def total_contributed(self):
-        return fees.objects.all().aggregate(total_committed=Sum('committed_amount'))['total_committed'] or 0
 class School(models.Model):
     LEVEL=(
         ('Primary', 'Primary'),

@@ -15,9 +15,11 @@
         </div>
         <div class="navbar">
             <ul>
-                <a href="#"><li>Home</li></a>
-                <a href="#"><li>About</li></a>
-                <a href="#"><li>Contact us</li></a>
+                <a href="{% url 'index' %}"><li>Home</li></a>
+                <a href="{% url 'forgot_password' %}"><li>About</li></a>
+                <a href="{% url 'forgot_password' %}"><li>Contact us</li></a>
+                <a href="{% url 'forgot_password' %}"><li>Statistics</li></a>
+                <a href="{% url 'forgot_password' %}"><li>Programs</li></a>
                 <a href="{% url 'login' %}"><li>Login</li></a>
             </ul>
         </div>
@@ -44,9 +46,8 @@
                     <li><a href="#">About</a></li>
                     <li><a href="#">FAQ</a></li>
                     <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Help</a></li>
                     <li><a href="#">Terms & Conditions</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Contact Us</a></li>
                 </ul>
             </div>
             <div class="quicklinkssec">
@@ -55,8 +56,8 @@
                     <li><a href="#">Home</a></li>
                     <li><a href="#">About</a></li>
                     <li><a href="#">Contacts</a></li>
-                    <li><a href="#">Services</a></li>
-                    <li><a href="#">Our History</a></li>
+                    <li><a href="#">Statistics</a></li>
+                    <li><a href="#">Programs</a></li>
                 </ul>
             </div>
             <div class="contactssec">
@@ -64,8 +65,8 @@
                 <ul class="info">
                     <li>
                         <span><img src="{% static 'images/placeholder.png' %}"></span>
-                        <span> 56 Gitanga Road <br> 
-                            Nairobi, Dago 17161,<br> Kenya</span>
+                        <span> xxxx <br> 
+                            Nairobi,<br> Kenya</span>
                     </li>
                     <li>
                         <span><img src="{% static 'images/icons8-phone-26.png' %}"></span>

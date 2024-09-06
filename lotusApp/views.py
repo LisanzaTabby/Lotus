@@ -6,7 +6,7 @@ from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, Schoo
 from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
-from .filters import StudentFilter, IntermediaryFilter, DonorFilter
+from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter
 from django.http import HttpResponse
 from django.db.models import Sum
 
@@ -149,7 +149,7 @@ def edit_intermediary(request, pk):
     context = {'form':form}
     return render(request, 'add_templates/add_intermediary.html', context)
 @login_required
-@allowed_users(allowed_roles=['Finance'])
+@allowed_users(allowed_roles=['Dataentry'])
 def intermediary_delete(request, pk):
     intermediary = Intermediary.objects.get(id=pk)
     if request.method == 'POST':
@@ -162,8 +162,10 @@ def intermediary_delete(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def schools(request):
-    schools = School.objects.all()
-    context = {'schools':schools}
+    schools = School.objects.all().order_by('id')
+    myFilter = SchoolFilter(request.POST, queryset=schools)
+    schools = myFilter.qs
+    context = {'schools':schools, 'myFilter': myFilter}
     return render(request, 'lists/school_list.html',context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
@@ -293,6 +295,29 @@ def donor_commitment_list(request):
     return render(request, 'lists/donor_commitment_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Finance'])
+def edit_donor_commitment(request,pk):
+    fee = Fees.objects.get(id=pk)
+    form = FeesForm(instance=fee)
+    if request.method == 'POST':
+        form = FeesForm(request.POST, instance=fee)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Donor Fee Commitment Updated SuccessFully!')
+            return redirect('donor_commitment_list')
+    context = {'form':form}    
+    return render(request, 'add_templates/add_fee_commitment.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
+def delete_donor_commitment(request,pk):
+    fee = Fees.objects.get(id=pk)
+    if request.method == 'POST':
+        fee.delete()
+        messages.info(request, 'Donor Fee Commitment Deleted Successfully!')
+        return redirect('donor_commitment_list')
+    context = {'fee':fee}
+    return render(request, 'delete_templates/delete_donor_commitment.html', context)
+@login_required
+@allowed_users(allowed_roles=['Finance'])
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
@@ -340,14 +365,14 @@ def employee_delete(request, pk):
 def donor_view(request):
     students = Student.objects.filter(donor=request.user)
     student_count = students.count()
-    commitments = Fees.objects.filter(donor=request.user)
+    #commitments = Fees.objects.filter(donor=request.user)
 
     # Debugging
-    for commitment in commitments:
+    #for commitment in commitments:
 
-        print(f"Commitment ID: {commitment.id}, Amount: {commitment.amount}")
+       # print(f"Commitment ID: {commitment.id}, Amount: {commitment.amount}")
 
-    context = {'students':students, 'student_count':student_count, 'commitment':commitment}
+    context = {'students':students, 'student_count':student_count}
     return render(request, 'User_pages/donor.html', context)
 @login_required
 @allowed_users(allowed_roles=['Donor'])
@@ -412,4 +437,4 @@ def logout_view(request):
     return redirect('login')
 # Password reset
 def forgot_password(request):
-    return HttpResponse("Feature is Under Development!")
+    return HttpResponse("Feature is Under Development......")

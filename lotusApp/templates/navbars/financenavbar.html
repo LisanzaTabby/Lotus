@@ -27,13 +27,26 @@
               
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  Dropdown
+                  View Data
                 </a>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="{% url 'donor_list' %}">Donors</a></li>
                   <li><a class="dropdown-item" href="{% url 'employee_list' %}">Employees</a></li>
                   <li><a class="dropdown-item" href="{% url 'students' %}">Students</a></li>
                   <li><a class="dropdown-item" href="{% url 'donor_commitment_list' %}">Donor Fee Commitments</a></li>
+                  <li><a class="dropdown-item" href="">Payments</a></li>
+                  <li><a class="dropdown-item" href="">Expenditures</a></li>
+                  <li><a class="dropdown-item" href="#">My profile</a></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  Finance Actions
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="{% url 'add_donor' %}">Add Donor</a></li>
+                  <li><a class="dropdown-item" href="{% url 'add_employee' %}">Add Employee</a></li>
+                  <li><a class="dropdown-item" href="{% url 'add_fee_commitment' %}">Add Donor Fee Commitment</a></li>
                   <li><a class="dropdown-item" href="#">My profile</a></li>
                 </ul>
               </li>

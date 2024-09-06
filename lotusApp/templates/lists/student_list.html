@@ -1,4 +1,10 @@
-{% extends 'navbars/dataentryactions.html' %}
+{% if is_dataentry %}
+{% include 'navbars/dataentryactions.html' %}
+{% endif %}
+{% if is_finance %}
+{% include 'navbars/financenavbar.html' %}
+{% endif %}
+
 {% block content %}
 <style>
     #message{
@@ -60,7 +66,7 @@
             </td>
             {% elif is_finance %}
             <td>
-               <a href=""class="btn btn-primary">View Fees Structure</a>
+               <a href=""class="btn btn-primary">Add Fee Payments</a>
 
             </td>
             {% endif %}
@@ -76,5 +82,7 @@
         </tbody>
         {% endif %}
       </table>
+    <a href="{% url 'forgot_password' %}" class="btn btn-primary">Print Students</a>
+
 </div>
 {% endblock %}

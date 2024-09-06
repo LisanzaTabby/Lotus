@@ -1,4 +1,4 @@
-{% extends 'navbars/financeactions.html' %}
+{% extends 'navbars/financenavbar.html' %}
 {% block content %}
 <style>
     h2{
@@ -59,6 +59,6 @@
     </tbody>
     {% endif %}
   </table>
-  <a href="{% url 'add_fee_commitment' %}" class="btn btn-primary">Add Fee Commitment</a>
+  <a href="{% url 'forgot_password' %}" class="btn btn-primary">Print Donor List</a>
   
 {% endblock %}
