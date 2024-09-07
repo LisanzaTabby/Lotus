@@ -44,7 +44,6 @@
                   <li><a class="dropdown-item" href="{% url 'students' %}">Students</a></li>
                   <li><a class="dropdown-item" href="{% url 'intermediaries' %}">Intermediaries</a></li>
                   <li><a class="dropdown-item" href="{% url 'schools' %}">Schools</a></li>
-                  <li><a class="dropdown-item" href="#">My profile</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -55,7 +54,6 @@
                   <li><a class="dropdown-item" href="{% url 'add_student' %}">Add Student</a></li>
                   <li><a class="dropdown-item" href="{% url 'add_intermediary' %}">Add Intermediary</a></li>
                   <li><a class="dropdown-item" href="{% url 'add_school' %}">Add school</a></li>
-                  <li><a class="dropdown-item" href="#">My profile</a></li>
                 </ul>
               </li>
             </ul>
@@ -65,6 +63,8 @@
             <li class="nav-item"style="list-style:none; font-weight:600; margin-right: 10px;">
                 <a class="nav-link" href="#">{{user.username}}</a>
               </li>
+              <li style="list-style: none; margin-right: 10px;"><a class="dropdown-item" href="#">My profile</a></li>
+
             
               </li>
               <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>

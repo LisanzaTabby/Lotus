@@ -29,22 +29,22 @@
         <th scope="col">DonorName</th>
         <th scope="col">Committed Amount</th>
         <th scope="col">Contributed Amount</th>
-        <th scope="col">Commitment Year</th>
+        <th scope="col">Year</th>
         <th scope="col">Date added</th>
         <th>Actions</th>
       </tr>
     </thead>
     {% if fees %}
 
-    {% for fees in fees %}
+    {% for fee in fees %}
     <tbody>
       <tr>
-        <td>{{fees.donor.id}}</td>
-        <td>{{fees.donor.donorName}}</td>
-        <td>{{fees.committed_amount}}</td>
-        <td>{{fees.contributed_amount}}</td>
-        <td>{{fees.year}}</td>
-        <td>{{fees.date_added}}</td>
+        <td>{{fee.donor.id}}</td>
+        <td>{{fee.donor.donorName}}</td>
+        <td>{{fee.committed_amount}}</td>
+        <td>{{fee.contributed_amount}}</td>
+        <td>{{fee.year}}</td>
+        <td>{{fee.date_added}}</td>
         <td>
             <a href="{% url 'edit_donor_commitment' fee.id %}" class="btn btn-primary">Edit </a>            
             <a href="{% url 'delete_donor_commitment' fee.id %}" class="btn btn-danger">Delete</a>            

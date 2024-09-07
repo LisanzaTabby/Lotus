@@ -21,6 +21,14 @@ class StudentFilter(django_filters.FilterSet):
     class Meta:
         model = Student
         fields = ['gender']
+class DonorStudentFilter(django_filters.FilterSet):
+    studentName = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')  
+    primary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Primary School')
+    secondary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Secondary School')
+    tertiary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Tertiary Institution')
+    class Meta:
+        model = Student
+        fields = ['gender']
 class IntermediaryFilter(django_filters.FilterSet):
     class Meta:
         model = Intermediary
@@ -34,3 +42,8 @@ class SchoolFilter(django_filters.FilterSet):
     class Meta:
         model = School
         fields = ['schoolName']
+
+class FeecommitmentFilter(django_filters.FilterSet):
+    class Meta:
+        model = Fees
+        fields = ['donor','year']

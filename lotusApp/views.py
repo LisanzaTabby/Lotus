@@ -6,7 +6,7 @@ from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, Schoo
 from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
-from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter
+from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter
 from django.http import HttpResponse
 from django.db.models import Sum
 
@@ -291,7 +291,9 @@ def add_fee_commitment(request):
 @allowed_users(allowed_roles=['Finance'])
 def donor_commitment_list(request):
     fees = Fees.objects.all().order_by('id')
-    context = {'fees':fees}
+    myFilter = FeecommitmentFilter(request.POST, queryset=fees)
+    fees = myFilter.qs
+    context = {'fees':fees, 'myFilter': myFilter}
     return render(request, 'lists/donor_commitment_list.html', context)
 @login_required
 @allowed_users(allowed_roles=['Finance'])
@@ -378,7 +380,9 @@ def donor_view(request):
 @allowed_users(allowed_roles=['Donor'])
 def donor_specific_students(request):
     students = Student.objects.filter(donor=request.user)
-    context = {'students':students}
+    myFilter = DonorStudentFilter(request.POST, queryset=students)
+    students = myFilter.qs
+    context = {'students':students, 'myFilter': myFilter}
     return render(request, 'lists/donor_specific_students.html', context)
 # student updation actions
 def update_academic_progress(request, pk):

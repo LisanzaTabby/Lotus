@@ -37,6 +37,44 @@
     <p>Date of Birth: {{ student.dateofbirth }}</p>
     <p>Background Information: {{ student.backgroundInfo }}</p>
 
+    <h3>Student Donor History</h3>
+    <table style="margin-top: 20px;" class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">Year</th>
+                <th scope="col">Donor</th>
+                <th scope="col">School Level</th>
+                <th scope="col">Changed on</th>
+                {% if is_dataentry %}
+                <th>Actions</th>
+                {% endif %}
+            </tr>
+        </thead>
+        {% if fees_payments %}
+        <tbody>
+            {% for payment in fees_payments %}
+            <tr>
+                <td>{{ payment.id }}</td>
+                <td>{{ payment.school_name }}</td>
+                <td>{{ payment.school_year }}</td>
+                <td>{{ payment.amount }}</td>
+                {% if is_finance %}
+                <td>
+                    <a href="" class="btn btn-primary">Edit</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% else %}
+        <tr>
+            <td colspan="5">No Donor History Found</td>
+        </tr>
+        {% endif %}
+    </table>
+    {% if is_dataentry %}
+    <a href="{ url 'forgot_password' }" class="btn btn-primary">Change Donor</a>
+    {%  endif %}
     <h3>Academic Progress</h3>
     <table style="margin-top: 20px;" class="table table-bordered">
         <thead>
@@ -153,6 +191,7 @@
         </tr>
         {% endif %}
     </table>
+    
     
     <p>Date added: {{ student.date_added }}</p>
 

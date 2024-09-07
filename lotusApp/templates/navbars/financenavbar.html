@@ -36,7 +36,6 @@
                   <li><a class="dropdown-item" href="{% url 'donor_commitment_list' %}">Donor Fee Commitments</a></li>
                   <li><a class="dropdown-item" href="">Payments</a></li>
                   <li><a class="dropdown-item" href="">Expenditures</a></li>
-                  <li><a class="dropdown-item" href="#">My profile</a></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -47,7 +46,6 @@
                   <li><a class="dropdown-item" href="{% url 'add_donor' %}">Add Donor</a></li>
                   <li><a class="dropdown-item" href="{% url 'add_employee' %}">Add Employee</a></li>
                   <li><a class="dropdown-item" href="{% url 'add_fee_commitment' %}">Add Donor Fee Commitment</a></li>
-                  <li><a class="dropdown-item" href="#">My profile</a></li>
                 </ul>
               </li>
             </ul>
@@ -57,6 +55,8 @@
             <li class="nav-item"style="list-style:none; font-weight:600; margin-right: 10px;">
                 <a class="nav-link" href="#">{{user.username}}</a>
               </li>
+              <li style="list-style: none; margin-right: 10px;"><a class="dropdown-item" href="#">My profile</a></li>
+
             
               </li>
               <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
