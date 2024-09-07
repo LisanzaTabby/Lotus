@@ -137,6 +137,26 @@ class Student(models.Model):
 
     def __str__(self):
         return f'{self.studentName}'
+    def save(self, *args, **kwargs):
+        if self.pk:
+            original_student = Student.objects.get(pk=self.pk)
+            if original_student.donor != self.donor:
+                StudentDonorHistory.objects.create(
+                    student= self,
+                    donor = self.donor,
+                    school_level = self.class_level,
+                    year = timezone.now().year,
+                )
+        super().save(*args, **kwargs)    
+class StudentDonorHistory(models.Model):
+    student = models.ForeignKey(Student, related_name='student_donor_history', on_delete=models.CASCADE)
+    donor = models.ForeignKey(User, on_delete=models.CASCADE)
+    school_level = models.CharField(max_length=25)
+    year = models.IntegerField()
+    changed_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'{self.student.studentName} {self.year} {self.donor.username}'
 
 class Employee(models.Model):
     GENDER = (

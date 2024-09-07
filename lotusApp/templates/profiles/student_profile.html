@@ -50,15 +50,15 @@
                 {% endif %}
             </tr>
         </thead>
-        {% if fees_payments %}
+        {% if donor_history %}
         <tbody>
-            {% for payment in fees_payments %}
+            {% for history in donor_history %}
             <tr>
-                <td>{{ payment.id }}</td>
-                <td>{{ payment.school_name }}</td>
-                <td>{{ payment.school_year }}</td>
-                <td>{{ payment.amount }}</td>
-                {% if is_finance %}
+                <td>{{ history.id }}</td>
+                <td>{{ history.donor.donorName }}</td>
+                <td>{{ history.school_year }}</td>
+                <td>{{ history.changed_on }}</td>
+                {% if is_dataentry %}
                 <td>
                     <a href="" class="btn btn-primary">Edit</a>
                 </td>
