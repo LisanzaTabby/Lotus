@@ -1,4 +1,4 @@
-from datetime import timezone
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Sum
@@ -153,7 +153,7 @@ class StudentDonorHistory(models.Model):
     donor = models.ForeignKey(User, on_delete=models.CASCADE)
     school_level = models.CharField(max_length=25)
     year = models.IntegerField()
-    changed_on = models.DateTimeField(auto_now_add=True)
+    changed_on = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f'{self.student.studentName} {self.year} {self.donor.username}'

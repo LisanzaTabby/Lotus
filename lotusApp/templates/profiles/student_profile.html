@@ -54,9 +54,9 @@
         <tbody>
             {% for history in donor_history %}
             <tr>
-                <td>{{ history.id }}</td>
-                <td>{{ history.donor.donorName }}</td>
-                <td>{{ history.school_year }}</td>
+                <td>{{ history.year }}</td>
+                <td>{{ history.donor.username }}</td>
+                <td>{{ history.school_level }}</td>
                 <td>{{ history.changed_on }}</td>
                 {% if is_dataentry %}
                 <td>
@@ -73,7 +73,7 @@
         {% endif %}
     </table>
     {% if is_dataentry %}
-    <a href="{ url 'forgot_password' }" class="btn btn-primary">Change Donor</a>
+    <a href="{ url 'edit_student' student.id }" class="btn btn-primary">Change Donor</a>
     {%  endif %}
     <h3>Academic Progress</h3>
     <table style="margin-top: 20px;" class="table table-bordered">

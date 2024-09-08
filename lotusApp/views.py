@@ -83,7 +83,7 @@ def student_profile(request, pk):
     student = Student.objects.get(id=pk)
     academicprogress = AcademicProgress.objects.filter(student=student).first()
     examresults = ExamResults.objects.filter(student=student).select_related('exam')
-    donor_history = student.StudentDonorHistory.all().order_by('-year')
+    donor_history = student.student_donor_history.all().order_by('-year')
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
     context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history}
     return render(request, 'profiles/student_profile.html', context)
