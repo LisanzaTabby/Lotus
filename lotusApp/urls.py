@@ -22,6 +22,7 @@ urlpatterns = [
     path('add_school/', views.add_school, name='add_school'),
     path('edit_school/<str:pk>/', views.edit_school, name='edit_school'),
     path('delete_school/<str:pk>/', views.school_delete, name='delete_school'),
+    path('student_donor_history/', views.student_donor_History, name='student_donor_history'),
     path('finance/', views.finance, name='finance'),
     path('donor_list/', views.donor_list, name='donor_list'),
     path('add_donor/', views.add_donor, name='add_donor'),
