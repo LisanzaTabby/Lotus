@@ -146,6 +146,7 @@ class Student(models.Model):
                     donor = self.donor,
                     school_level = self.class_level,
                     year = timezone.now().year,
+                    changed_on = timezone.now().date()
                 )
         super().save(*args, **kwargs)    
 class StudentDonorHistory(models.Model):

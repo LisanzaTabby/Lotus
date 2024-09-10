@@ -21,6 +21,13 @@ class StudentFilter(django_filters.FilterSet):
     class Meta:
         model = Student
         fields = ['gender']
+
+class StudentDonorHistoryFilter(django_filters.FilterSet):
+    studentName = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')
+    donor = django_filters.ModelChoiceFilter(queryset=User.objects.all(), label='Donor')
+    class Meta:
+        model = StudentDonorHistory
+        fields = ['year']
 class DonorStudentFilter(django_filters.FilterSet):
     studentName = django_filters.CharFilter(lookup_expr='icontains', label='Student Name')  
     primary_school = django_filters.ModelChoiceFilter(queryset=School.objects.all(), label='Primary School')

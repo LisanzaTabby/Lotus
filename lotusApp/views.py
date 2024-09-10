@@ -3,10 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm, FeesForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees, StudentDonorHistory
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
-from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter
+from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter, StudentDonorHistoryFilter
 from django.http import HttpResponse
 from django.db.models import Sum
 
@@ -63,6 +63,15 @@ def students(request):
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
     context = {'students':students, 'myFilter': myFilter, 'is_finance':is_finance, 'is_dataentry':is_dataentry}
     return render(request, 'lists/student_list.html', context)
+@login_required
+@allowed_users(allowed_roles=['Dataentry'])
+def student_donor_History(request):
+    students = StudentDonorHistory.objects.all().order_by('id')
+    myFilter = StudentDonorHistoryFilter(request.POST, queryset=students)
+    students = myFilter.qs
+    context = {'students':students, 'myFilter': myFilter}
+    return render(request, 'lists/student_donor_history.html', context)
+
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def add_student(request):
