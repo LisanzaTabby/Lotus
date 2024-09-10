@@ -116,6 +116,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
 LOGIN_URL = 'login'
 
 
@@ -131,5 +132,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/student_pics')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '#'
+EMAIL_HOST_PASSWORD = '#'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
