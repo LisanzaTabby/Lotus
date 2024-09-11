@@ -89,17 +89,17 @@ def add_student(request):
 # student Profile
 @login_required
 def student_profile(request, pk):
-    student = Student.objects.get(id=pk)
-    academicprogress = AcademicProgress.objects.filter(student=student).first()
-    examresults = ExamResults.objects.filter(student=student).select_related('exam')
-    donor_history = student.student_donor_history.all().order_by('-year')
+    student = get_object_or_404(Student, id=pk)
+    academicprogress = get_object_or_404(AcademicProgress, student=student).first()
+    examresults = get_object_or_404(ExamResults, student=student).select_related('exam')
+    donor_history = get_object_or_404(StudentDonorHistory, student=student).order_by('-year')
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
     context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history}
     return render(request, 'profiles/student_profile.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 
 def edit_student(request, pk):
-    student = Student.objects.get(id=pk)
+    student = get_object_or_404(Student, id=pk)
     form = StudentForm(instance=student)
     if request.method == 'POST':
         form = StudentForm(request.POST, request.FILES, instance=student)
@@ -112,7 +112,7 @@ def edit_student(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 
 def student_delete(request, pk):
-    student = Student.objects.get(id=pk)
+    student = get_object_or_404(Student, id=pk)
     if request.method == 'POST':
         student.delete()
         messages.info(request, 'Student Deleted Successfully!')
@@ -147,7 +147,7 @@ def add_intermediary(request):
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])   
 def edit_intermediary(request, pk):
-    intermediary = Intermediary.objects.get(id=pk)
+    intermediary = get_object_or_404(Intermediary, id=pk)
     form = IntermediaryForm(instance=intermediary)
     if request.method =='POST':
         form = IntermediaryForm(request.POST,instance=intermediary)
@@ -160,7 +160,7 @@ def edit_intermediary(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def intermediary_delete(request, pk):
-    intermediary = Intermediary.objects.get(id=pk)
+    intermediary = get_object_or_404(Intermediary, id=pk)
     if request.method == 'POST':
         intermediary.delete()
         messages.info(request, 'Intermediary Deleted Successfully!')
@@ -194,7 +194,7 @@ def add_school(request):
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def edit_school(request, pk):
-    school = School.objects.get(id=pk)
+    school = get_object_or_404(School, id=pk)
     form = SchoolForm(instance=school)
     if request.method =='POST':
         form = SchoolForm(request.POST,instance=school)
@@ -207,7 +207,7 @@ def edit_school(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Dataentry'])
 def school_delete(request, pk):
-    school = School.objects.get(id=pk)
+    school = get_object_or_404(School, id=pk)
     if request.method == 'POST':
         school.delete()
         messages.info(request, 'School Deleted Successfully!')
@@ -262,7 +262,7 @@ def donor_list(request):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def edit_donor(request, pk):
-    donor = Donor.objects.get(id=pk)
+    donor = get_object_or_404(Donor, id=pk)
     form = DonorForm(instance=donor)
     if request.method =='POST':
         form = DonorForm(request.POST,instance=donor)
@@ -275,7 +275,7 @@ def edit_donor(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def donor_delete(request, pk):
-    donor = Donor.objects.get(id=pk)
+    donor = get_object_or_404(Donor, id=pk)
     if request.method == 'POST':
         donor.delete()
         messages.info(request, 'Donor Deleted Successfully!')
@@ -307,7 +307,7 @@ def donor_commitment_list(request):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def edit_donor_commitment(request,pk):
-    fee = Fees.objects.get(id=pk)
+    fee = get_object_or_404(Fees, id=pk)
     form = FeesForm(instance=fee)
     if request.method == 'POST':
         form = FeesForm(request.POST, instance=fee)
@@ -320,7 +320,7 @@ def edit_donor_commitment(request,pk):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def delete_donor_commitment(request,pk):
-    fee = Fees.objects.get(id=pk)
+    fee = get_object_or_404(Fees, id=pk)
     if request.method == 'POST':
         fee.delete()
         messages.info(request, 'Donor Fee Commitment Deleted Successfully!')
@@ -350,7 +350,7 @@ def employee_list(request):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def edit_employee(request, pk):
-    employee = Employee.objects.get(id=pk)
+    employee = get_object_or_404(Employee, id=pk)
     form = EmployeeForm(instance=employee)
     if request.method =='POST':
         form = EmployeeForm(request.POST,instance=employee)
@@ -363,7 +363,7 @@ def edit_employee(request, pk):
 @login_required
 @allowed_users(allowed_roles=['Finance'])
 def employee_delete(request, pk):
-    employee = Employee.objects.get(id=pk)
+    employee = get_object_or_404(Employee, id=pk)
     if request.method == 'POST':
         employee.delete()
         messages.info(request, 'Employee Deleted Successfully!')
