@@ -90,11 +90,13 @@ def add_student(request):
 @login_required
 def student_profile(request, pk):
     student = get_object_or_404(Student, id=pk)
-    academicprogress = get_object_or_404(AcademicProgress, student=student).first()
-    examresults = get_object_or_404(ExamResults, student=student).select_related('exam')
-    donor_history = get_object_or_404(StudentDonorHistory, student=student).order_by('-year')
+    academicprogress = AcademicProgress.objects.filter(student=student).first()
+    examresults = ExamResults.objects.filter(student=student).select_related('exam')
+    donor_history = StudentDonorHistory.objects.filter(student=student).order_by('-year')
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
-    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history}
+    is_finance = request.user.groups.filter(name='Finance').exists()
+    is_donor = request.user.groups.filter(name='Donor').exists()
+    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history, 'is_finance':is_finance, 'is_donor':is_donor}
     return render(request, 'profiles/student_profile.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 

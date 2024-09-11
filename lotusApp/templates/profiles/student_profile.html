@@ -1,5 +1,12 @@
-{% extends 'base.html' %}
-
+{% if is_dataentry %}
+{% include 'navbars/dataentryactions.html' %}
+{% endif %}
+{% if is_finance %}
+{% include 'navbars/financenavbar.html' %}
+{% endif %}
+{% if is_donor %}
+{% include 'navbars/donor_navbar.html' %}
+{% endif %}
 {% block content %}
 <style>
     .main {
