@@ -148,6 +148,12 @@ class Student(models.Model):
                     year = timezone.now().year,
                     changed_on = timezone.now().date()
                 )
+            if original_student.class_level != self.class_level:
+                AcademicProgress.objects.create(
+                    student= self,
+                    school_level = self.class_level,
+                    year = timezone.now().year,
+                )
         super().save(*args, **kwargs)    
 class StudentDonorHistory(models.Model):
     student = models.ForeignKey(Student, related_name='student_donor_history', on_delete=models.CASCADE)
@@ -181,26 +187,16 @@ class Employee(models.Model):
 
     def __str__(self):
         return f'{self.employeeName}'
-    
+'''   
 class AcademicProgress(models.Model):
-    YEAR = (
-        ('2023','2023'),
-        ('2024','2024'),
-    )
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    year = models.CharField(max_length=4, choices=YEAR)
+    year = models.IntegerField()
+    school_level = models.CharField(max_length= 25, null=True, blank=True)
     bursaries =models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.student.studentName}'
-    
-    def update_progress(self, year, class_level):
-        if year == 2023:
-            self.year = class_level
-        if year == 2024:
-            self.year = class_level
-        self.save()
-
+'''
 class Exam(models.Model):
     TERM_CHOICES = (
         ('Term1','Term1'),

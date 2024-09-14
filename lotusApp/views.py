@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
 from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm, FeesForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, AcademicProgress,School,Fees, StudentDonorHistory
+from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults,School,Fees, StudentDonorHistory
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
 from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter, StudentDonorHistoryFilter
@@ -90,13 +90,13 @@ def add_student(request):
 @login_required
 def student_profile(request, pk):
     student = get_object_or_404(Student, id=pk)
-    academicprogress = AcademicProgress.objects.filter(student=student).first()
+    #academicprogress = AcademicProgress.objects.filter(student=student).first()
     examresults = ExamResults.objects.filter(student=student).select_related('exam')
     donor_history = StudentDonorHistory.objects.filter(student=student).order_by('-year')
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
     is_finance = request.user.groups.filter(name='Finance').exists()
     is_donor = request.user.groups.filter(name='Donor').exists()
-    context = {'student': student,'academicprogress':academicprogress,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history, 'is_finance':is_finance, 'is_donor':is_donor}
+    context = {'student': student,'examresults':examresults,'is_dataentry':is_dataentry, 'donor_history':donor_history, 'is_finance':is_finance, 'is_donor':is_donor}
     return render(request, 'profiles/student_profile.html', context)
 @login_required
 @allowed_users(allowed_roles=['Dataentry']) 
@@ -396,6 +396,7 @@ def donor_specific_students(request):
     context = {'students':students, 'myFilter': myFilter}
     return render(request, 'lists/donor_specific_students.html', context)
 # student updation actions
+'''
 def update_academic_progress(request, pk):
     student = get_object_or_404(Student, id=pk)
 
@@ -421,6 +422,7 @@ def update_academic_progress(request, pk):
             messages.error(request, f'An error occurred: {str(e)}')
 
     return render(request, 'add_templates/add_academic_progress.html', {'progress': progress, 'student': student})
+'''
 def add_exam(request):
     if request.method == 'POST':
         form = ExamForm(request.POST)
