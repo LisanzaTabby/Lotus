@@ -1,5 +1,12 @@
-{% extends 'base.html' %}
-
+{% if is_dataentry %}
+{% include 'navbars/dataentryactions.html' %}
+{% endif %}
+{% if is_finance %}
+{% include 'navbars/financenavbar.html' %}
+{% endif %}
+{% if is_donor %}
+{% include 'navbars/donor_navbar.html' %}
+{% endif %}
 {% block content %}
 <style>
     .main {
@@ -96,7 +103,7 @@
                 {% endif %}
                 {% if is_dataentry %}
                 <td>
-                    <a href="{% url 'update_academic_progress' student.id %}" class="btn btn-primary">Update</a>
+                    <a href="" class="btn btn-primary">Update</a>
                 </td>
                 {% endif %}
             </tr>
@@ -109,7 +116,7 @@
                 {% endif %}
                 {% if is_dataentry %}
                 <td>
-                    <a href="{% url 'update_academic_progress' student.id %}" class="btn btn-primary">Update</a>
+                    <a href="" class="btn btn-primary">Update</a>
                 </td>
                 {% endif %}
             </tr>
