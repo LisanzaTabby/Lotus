@@ -30,8 +30,6 @@
         <th>Actions</th>
       </tr>
     </thead>
-    {% if positions %}
-
     {% for position in positions %}
     <tbody>
       <tr>
@@ -45,13 +43,11 @@
         </td>
       </tr>
     </tbody>
-    {% endfor %}
-    {% else %}
-    <tbody>
-      <tr>
-        <td colspan="6">No intermediaries found</td>
-      </tr>
-    </tbody>
-    {% endif %}
+{% empty %}
+  <tr>
+    <td colspan="10">No Positions found</td>
+  </tr>
+</tbody>
+{% endfor %}
   </table>
 {% endblock %}

@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404, render
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.shortcuts import redirect
-from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm, FeesForm
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults,School,Fees, StudentDonorHistory
+#from .forms import StudentForm, DonorForm, IntermediaryForm, EmployeeForm, SchoolForm,ExamResultsForm,ExamForm, FeesForm
+#from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults,School,Fees, StudentDonorHistory
 from django.contrib.auth.decorators import login_required
 from .decorators import unauthenticated_user, allowed_users
-from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter, StudentDonorHistoryFilter
+#from .filters import StudentFilter, IntermediaryFilter, DonorFilter,SchoolFilter,FeecommitmentFilter, DonorStudentFilter, StudentDonorHistoryFilter
 from django.http import HttpResponse
 from django.db.models import Sum
 
@@ -14,6 +14,7 @@ from django.db.models import Sum
 @unauthenticated_user
 def index(request):
     return render(request, 'index.html')
+'''
 @unauthenticated_user
 def user_login(request):
     if request.method == 'POST':
@@ -90,7 +91,6 @@ def add_student(request):
 @login_required
 def student_profile(request, pk):
     student = get_object_or_404(Student, id=pk)
-    #academicprogress = AcademicProgress.objects.filter(student=student).first()
     examresults = ExamResults.objects.filter(student=student).select_related('exam')
     donor_history = StudentDonorHistory.objects.filter(student=student).order_by('-year')
     is_dataentry = request.user.groups.filter(name='Dataentry').exists()
@@ -395,34 +395,7 @@ def donor_specific_students(request):
     students = myFilter.qs
     context = {'students':students, 'myFilter': myFilter}
     return render(request, 'lists/donor_specific_students.html', context)
-# student updation actions
-'''
-def update_academic_progress(request, pk):
-    student = get_object_or_404(Student, id=pk)
 
-    # Get the academic progress instance or create one if it doesn't exist
-    progress, created = AcademicProgress.objects.get_or_create(student=student)
-
-    if request.method == 'POST':
-        try:
-            year = int(request.POST.get('year'))
-            class_level = request.POST.get('class_level')
-
-            # Make sure the class_level is valid before proceeding
-            if not class_level:
-                messages.error(request, 'Class level is required.')
-                return render(request, 'add_templates/add_academic_progress.html', {'progress': progress, 'student': student})
-
-            progress.update_progress(year, class_level)
-            messages.success(request, 'Academic Progress saved successfully!')
-            return redirect('student_profile', pk=pk)
-        except ValueError:
-            messages.error(request, 'Invalid input for year.')
-        except Exception as e:
-            messages.error(request, f'An error occurred: {str(e)}')
-
-    return render(request, 'add_templates/add_academic_progress.html', {'progress': progress, 'student': student})
-'''
 def add_exam(request):
     if request.method == 'POST':
         form = ExamForm(request.POST)
@@ -448,6 +421,7 @@ def update_exam_results(request, pk):
             return redirect('student_profile')
     context = {'form':form,'student':student}
     return render(request, 'add_templates/add_exam_results.html', context)
+'''
 # logout function
 def logout_view(request):
     logout(request)

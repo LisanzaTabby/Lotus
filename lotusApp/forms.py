@@ -1,4 +1,4 @@
-from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, School, Fees
+#from .models import Student, Donor, Intermediary, Employee, Exam, ExamResults, School, Fees
 from django.forms import ModelForm
 from django import forms
 
@@ -43,12 +43,6 @@ class EmployeeForm(ModelForm):
         model = Employee
         fields = '__all__'
         exclude = ['date_added']
-'''
-class AcademicProgressForm(ModelForm):
-    class Meta:
-        model = AcademicProgress
-        fields = '__all__'
-'''
 class ExamForm(ModelForm):
     class Meta:
         model = Exam
