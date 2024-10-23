@@ -30,8 +30,6 @@
         <th>Actions</th>
       </tr>
     </thead>
-    {% if employees %}
-
     {% for employee in employees %}
     <tbody>
       <tr>
@@ -49,14 +47,12 @@
         </td>
       </tr>
     </tbody>
-    {% endfor %}
-    {% else %}
-    <tbody>
-      <tr>
-        <td colspan="6">No intermediaries found</td>
-      </tr>
-    </tbody>
-    {% endif %}
+  {% empty %}
+  <tr>
+    <td colspan="10">No Employees found</td>
+  </tr>
+</tbody>
+{% endfor %}
   </table>
   <a href="{% url 'forgot_password' %}" class="btn btn-primary">Print Employee List</a>
 

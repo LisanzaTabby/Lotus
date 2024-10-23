@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models import Sum
 
 # Create your models here.
+'''
 class Intermediary(models.Model):
     LOCATION = (
         ('Nairobi', 'Nairobi'),
@@ -148,12 +149,6 @@ class Student(models.Model):
                     year = timezone.now().year,
                     changed_on = timezone.now().date()
                 )
-            if original_student.class_level != self.class_level:
-                AcademicProgress.objects.create(
-                    student= self,
-                    school_level = self.class_level,
-                    year = timezone.now().year,
-                )
         super().save(*args, **kwargs)    
 class StudentDonorHistory(models.Model):
     student = models.ForeignKey(Student, related_name='student_donor_history', on_delete=models.CASCADE)
@@ -187,16 +182,6 @@ class Employee(models.Model):
 
     def __str__(self):
         return f'{self.employeeName}'
-'''   
-class AcademicProgress(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    year = models.IntegerField()
-    school_level = models.CharField(max_length= 25, null=True, blank=True)
-    bursaries =models.IntegerField(null=True, blank=True)
-
-    def __str__(self):
-        return f'{self.student.studentName}'
-'''
 class Exam(models.Model):
     TERM_CHOICES = (
         ('Term1','Term1'),
@@ -221,3 +206,4 @@ class ExamResults(models.Model):
         return f'{self.subject}, {self.score}'
 
     
+'''

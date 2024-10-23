@@ -1,7 +1,7 @@
 import django_filters
 from django_filters import *
 from .models import *
-
+'''
 class StudentFilter(django_filters.FilterSet):
     LEVELofSUPPORT = (
         ('PrimaryOnly', 'PrimaryOnly'),
@@ -54,3 +54,4 @@ class FeecommitmentFilter(django_filters.FilterSet):
     class Meta:
         model = Fees
         fields = ['donor','year']
+'''
